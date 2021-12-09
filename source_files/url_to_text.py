@@ -12,7 +12,6 @@ from pdfminer.high_level import extract_text
 import os
 
 
-
 #user-defined variables - could be overridden by command line arguments
 #user_url="https://raw.githubusercontent.com/mathmanu/caffe-jacinto-models/caffe-0.17/trained/image_classification/imagenet_jacintonet11v2/initial/test.prototxt"
 #user_url="https://en.wikipedia.org/wiki/Baahubali_2:_The_Conclusion"
@@ -94,6 +93,8 @@ else:
         sys.exit();
     print("Local file, type = ",ext)
     filetype=ext;
+
+
 
 ############################# HTML/PDF/TXT PROCESSING #################################3
 text_content_infile = open("../output_files/outfile_inter.txt","w");
