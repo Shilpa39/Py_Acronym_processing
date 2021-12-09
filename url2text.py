@@ -4,6 +4,7 @@ import io
 import requests
 import urllib.request
 from pdfminer.high_level import extract_text
+import os
 
 # ------- Extracting text from a PDF URL ------------    
 
@@ -22,6 +23,7 @@ with open("filename.pdf",'wb') as fi:
 
 text = extract_text('filename.pdf')
 print(text)
+os.remove("filename.pdf")
 
 # ------- Extracting text from a HTML URL ------------    
 url = "http://kite.com"
