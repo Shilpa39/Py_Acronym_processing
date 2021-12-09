@@ -10,20 +10,9 @@ import os
 
 url = "https://arxiv.org/pdf/2112.03918.pdf"
 r = requests.get(url)
- 
-# the HTTP response in a response object called r
-with open("filename.pdf",'wb') as fi:
-  
-    # Saving received content as a pdf file in
-    # binary format
-  
-    # write the contents of the response (r.content)
-    # to a new file in binary mode.
-    fi.write(r.content)
-
-text = extract_text('filename.pdf')
+f = io.BytesIO(r.content)
+text = extract_text(f)
 print(text)
-os.remove("filename.pdf")
 
 # ------- Extracting text from a HTML URL ------------    
 url = "http://kite.com"
