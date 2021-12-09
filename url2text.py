@@ -5,9 +5,11 @@ import io
 import requests
 import urllib.request
 from pathlib import Path
-    
+
+# ------- Extracting text from a PDF file existing locally ------------    
+
 # creating a pdf file object 
-pdfFileObj = open('PDF_dataset/pdf1.pdf', 'rb') 
+pdfFileObj = open('PDF_dataset/pdf2.pdf', 'rb') 
     
 # creating a pdf reader object 
 pdfReader = PyPDF2.PdfFileReader(pdfFileObj) 
@@ -26,8 +28,7 @@ print(text)
 # closing the pdf file object 
 pdfFileObj.close()
 
-print("\n ---------------------------------------------------------------- \n")
-
+# ------- Extracting text from a HTML URL ------------    
 url = "http://kite.com"
 html = urlopen(url).read()
 soup = BeautifulSoup(html, features="html.parser")
@@ -45,11 +46,13 @@ lines = (line.strip() for line in text2.splitlines())
 # drop blank lines
 text2 = ' '.join(line for line in lines if line)
 
-#print(text2)
-print("\n ---------------------------------------------------------------- \n")
+print(text2)
 
-url2 = 'http://ceur-ws.org/Vol-2150/BARR2_paper2.pdf'
+# ------- Extracting text from a PDF URL ------------    
+
+#url2 = 'http://ceur-ws.org/Vol-2150/BARR2_paper2.pdf'
 #url2 = "http://www.africau.edu/images/default/sample.pdf"
+url2 = "https://arxiv.org/pdf/2112.03918.pdf"
 r = requests.get(url2)
  
 # the HTTP response in a response object called r
@@ -79,18 +82,7 @@ for i in range(pdfReader2.numPages):
 
 """with open("output2.txt",'w') as o2:
   o2.write(text3)"""
-print(text3) 
-    
-# closing the pdf file object 
-pdfFileObj2.close()
-
-"""f = io.BytesIO(r.content)
-
-reader = PyPDF2.PdfFileReader(f)
-contents = reader.getPage(0).extractText().split('\n')
-
-print(contents)"""
-print("\n ---------------------------------------------------------------- \n")
+print(text3)    
 print("\n ---------------------------------------------------------------- \n")
 
 
