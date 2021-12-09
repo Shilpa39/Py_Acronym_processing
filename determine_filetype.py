@@ -3,9 +3,12 @@ import mimetypes
 import magic
 import pathlib
 
+#user-defined variables
 user_url="/home/a0492783/Py_Acronym_processing/myfile.pdf"
 isLocal=True;
 
+
+#code starts here
 url_to_file = ""
 local_file_path = ""
 filetype= ""
