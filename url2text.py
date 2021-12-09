@@ -30,7 +30,7 @@ text2 = soup.get_text()
 lines = (line.strip() for line in text2.splitlines())
 
 # drop blank lines
-text2 = ' '.join(line for line in lines if line)
+text2 = '\n'.join(line for line in lines if line)
 
 print(text2)
 
