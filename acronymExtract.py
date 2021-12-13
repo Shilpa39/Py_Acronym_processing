@@ -13,10 +13,32 @@ def file_read(url):
     return text
 
 def main():
-    url = "https://arxiv.org/pdf/2111.00944"
+    url = "https://arxiv.org/pdf/2110.11694"
     text = file_read(url)
     # print(text)
-    acronym_list = set([x.group() for x in re.finditer(r'\b[A-Z](?=([&.]?))(?:\1[A-Z]){1,5}\b', text)])
-    print(acronym_list)
+    # acronym_list = set([x.group() for x in re.finditer(r'\b[A-Z](?=([&.]?))(?:\1[A-Z]){1,5}\b', text)])
+    # print(acronym_list)
+    for x in re.finditer(r'\b[A-Z](?=([&.]?))(?:\1[A-Z]){1,5}\b', text):
+        print(x.group(), x.start(), x.end())
 
-main()
+def window_range(startidx, endidx, size):
+    if(startidx < size)
+
+def play():
+    fpath =  "play.txt"
+    with open(fpath,'r') as f:
+        text_file = f.readlines()
+        text_file = ' '.join(text_file)
+        text_file = re.sub(r"[^A-Za-z\.&]", " ", text_file)
+        text_file = ' '.join(text_file)
+        
+        for x in re.finditer(r'\b[A-Z](?=([&.]?))(?:\1[A-Z]){1,5}\b', text):
+            ## Routine to build a window 
+            ## Search for expansion
+            ## Add to dictionary
+
+
+    print(text_file)
+    
+
+play()

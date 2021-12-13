@@ -10,12 +10,13 @@ import io
 import urllib.request
 from pdfminer.high_level import extract_text
 import os
+import re
 
 
 #user-defined variables - could be overridden by command line arguments
 #user_url="https://raw.githubusercontent.com/mathmanu/caffe-jacinto-models/caffe-0.17/trained/image_classification/imagenet_jacintonet11v2/initial/test.prototxt"
 #user_url="https://en.wikipedia.org/wiki/Baahubali_2:_The_Conclusion"
-user_url="https://arxiv.org/pdf/2111.13875"
+user_url="https://arxiv.org/pdf/2110.11694"
 isLocal=False;
 
 #user_url="/home/a0492783/Downloads/TI_C7X_DSP_TRAINING_00.06/c7x_dsp_isa/C7x_ISA_Database.html"
@@ -188,3 +189,41 @@ else:
 
 
 #raw text content from PDF/HTML/TXT document now present in outfile_inter.txt
+
+"""
+Generic helper function that returns start and end index of the window of a given size 
+containing the acronym
+"""
+def build_window(acronym_start_idx, acronym_end_idx, size):
+    window_start_idx = acronym_start_idx
+    window_end_idx = acronym_end_idx 
+
+    ### Core logic
+
+    return (window_start_idx, window_end_idx)
+
+
+"""
+Function to get the expansion of the acronym
+"""
+def expansion_finder(text_window, acronym):
+    expansion = "DNE"
+
+    ### Core logic
+
+    return expansion
+
+
+fpath =  abs_outfile_path
+text_file = ''
+expansion_database = {}
+
+with open(fpath,'r') as f:
+    text_file = f.readlines()
+    text_file = ' '.join(text_file)
+    text_file = re.sub(r"[^A-Za-z\.&]", " ", text_file)
+
+for x in re.finditer(r'\b[A-Z](?=([&.]?))(?:\1[A-Z]){1,5}\b', text_file):
+    ## Routine to build a window 
+    ## Search for expansion
+    ## Add to dictionary
