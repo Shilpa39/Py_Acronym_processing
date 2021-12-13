@@ -15,7 +15,7 @@ import os
 #user-defined variables - could be overridden by command line arguments
 #user_url="https://raw.githubusercontent.com/mathmanu/caffe-jacinto-models/caffe-0.17/trained/image_classification/imagenet_jacintonet11v2/initial/test.prototxt"
 #user_url="https://en.wikipedia.org/wiki/Baahubali_2:_The_Conclusion"
-user_url="https://arxiv.org/pdf/1611.01228"
+user_url="https://arxiv.org/pdf/2111.13875"
 isLocal=False;
 
 #user_url="/home/a0492783/Downloads/TI_C7X_DSP_TRAINING_00.06/c7x_dsp_isa/C7x_ISA_Database.html"
@@ -33,16 +33,16 @@ if(len(sys.argv)>1):
             isLocal=False;
         else:
             print("Invalid input. Correct input format is:")
-            cmnd_str = "python determine_filetype.py"
-            cmnd_args = " <url_to_file> <True/False>"
+            cmnd_str = "python url_to_text.py"
+            cmnd_args = "<url/absolute_path to file> <True/False>"
             print(cmnd_str)
             print("or")
             print(cmnd_str+cmnd_args)
             sys.exit();
     else:
         print("Invalid input. Correct input format is:")
-        cmnd_str = "python determine_filetype.py"
-        cmnd_args = " <url_to_file> <True/False>"
+        cmnd_str = "python url_to_text.py"
+        cmnd_args = "<url/absolute_path to file> <True/False>"
         print(cmnd_str)
         print("or")
         print(cmnd_str+cmnd_args)
@@ -52,6 +52,11 @@ url_to_file = ""
 local_file_path = ""
 filetype= ""
 ext=""
+
+if(isLocal):
+    if(not os.path.exists(user_url)):
+        print("File path does not exist, please provide right file path.")
+        sys.exit();
 
 if(not isLocal):
     url_to_file = user_url;
@@ -97,7 +102,8 @@ else:
 
 
 ############################# HTML/PDF/TXT PROCESSING #################################3
-text_content_infile = open("../output_files/outfile_inter.txt","w");
+abs_outfile_path = os.path.abspath("../output_files/outfile_inter.txt");
+text_content_infile = open(abs_outfile_path,"w");
 
 if(ext == ".html" ):
 

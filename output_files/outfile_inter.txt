@@ -1,1006 +1,1519 @@
-URL ORDERING POLICIES FOR DISTRIBUTED 
-CRAWLERS: A REVIEW 
+Topology optimization of stiﬀ structures under self-weight for
+given volume using a smooth Heaviside function
 
-Deepika 
-Assistant Professor, 
-Computer Engineering Department, 
-YMCAUST, Faridabad 121006 
-Email: deepikapunj@gmail.com 
+P. Kumar1
 
- 
+Department of Mechanical Engineering, Indian Institute of Science, Bengaluru 560012, Karnataka,
+India
 
-Dr Ashutosh Dixit 
-Associate Professor, 
-Computer Engineering Department, 
-YMCAUST, Faridabad 121006 
-Email:dixit_ashutosh@rediffmail.com 
+1
+2
+0
+2
  
-
+v
+o
+N
  
-
- 
- 
-Abstract—With the increase in size of web, the information is also spreading at large scale. Search Engines are the 
-medium to access this information. Crawler is the module of search engine which is responsible for download the web 
-pages. In order to download the fresh information and get the database rich, crawler should crawl the web in some 
-order. This is called as ordering of URLs. URL ordering should be done in efficient and effective manner in order to 
-crawl the web in proficient manner. In this paper, a survey is done on some existing methods of URL ordering and at 
-the end of this paper comparison is also carried out among them. 
- 
-Keywords— URL ordering, URL structure, hashing, task, link count, clustering 
-
- 
-
+7
+2
  
  
-
-I. 
-
-INTRODUCTION 
-
-As  the  size  of  web  increases,  it  is  necessary  for 
-search engines to enrich their databases  with fresh 
-and latest information. Information on the web is in 
-the  form  of  web  pages.  So,  there  should  be  some 
-way to get  fresh pages  in  search engines database. 
-The crawler is the module which is responsible for 
-downloading  web pages  from  web. It starts  with a 
-URL  from seed URLs  list and downloads the  web 
-pages. It also extracts URLs embedded there in and 
-adds  these  URLs  in  the  URLs  queue  and  so  on. 
-This  process  of  crawling  should  be  optimized  in  a 
-way  to  cover  maximum  size  of  web.  There  are 
-many  design  issues  related  to  design  of  a  crawler 
-[1].  Each  issue  has  its  own  role  in  order  to  work 
-crawler  proficiently.  If  the  work  of  crawling  is 
-either parallelized or distributed by creating crawler 
-instances,  say  agents.  The  general  architecture  of 
-Distributed  crawling  is  shown  in  figure  1.  But  by 
-creating  agents,  many  other  problems  may  arise. 
-One  of  the  major  problems  is  the  problem  of 
-duplicate  downloading of URLs. One URL can be 
-downloaded  by  multiple  agents  and  thus  wasting 
-bandwidth and network resources.  
-
-As shown in figure 1, crawler has multiple agents 
-that are distributed over World Wide Web. These 
-agents crawl the web and send the pages to the 
-crawler. Crawler stores the pages and internal links 
-are extracted from them and added to Queue. Form 
-Queue URLs are submitted again to crawler and 
-then crawler sends them to agents and the whole 
-process repeats.  
-
-WWW 
-
-Agent 
-
-              Agent 
-
-    Agent 
-
-CRAWLER 
-
-Stored 
-Internal 
-URLs 
-
-Store Web 
-Pages 
-
-Web 
-Pages 
-
-Get URLs 
-
-URL 
-Queue 
-
-Figure 1: General Architecture of Distributed Crawler 
-
- 
-
-II. 
-
-URL ORDERING 
-
-Ordering  of  URLs  is  an  important  concern  for 
-efficient  downloading  of  web  pages.  By  Ordering, 
-crawler  agents  will  get  list  of  unique  URLs  and 
-thus  parallelize  the  downloading  in  appropriate 
-way.  To  do  this  job  in  proper  manner,  following 
-issues should be taken care of: 
-
-  Check of duplicity 
-
-When  crawling  is  carried  out  in  parallel 
-then  there  are  chances  of  downloading  or 
-accessing  the  same  URL  by  different 
-agents.  
-
-  Network Resources Utilization 
-
-There  should  be  proper  utilization  of 
-network  resources.  It  should  not  be  the 
-case 
-that  some  agents  are  utilizing 
-resources  more  and  some  are  waiting  for 
-long. 
-
-  Load Balancing 
-
-Load should be properly distributed to the 
-agents.  All  agents  get  the  load  equally.  It 
-should not be the case that some are sitting 
-idle while others are overloaded. 
- 
-III. 
-
-URL ORDERING POLICIES 
-
-Many  researchers  have  done  work  in  this  area. 
-Some  of  their  work  is  discussed  below  with  their 
-advantages and disadvantages. 
-
-A. Task Based Scheduling 
-
-Dajie  et  al  [2]  proposed  a  URL  scheduling 
-algorithm based on Round Robin Scheduling. They 
-used  weight  factor  to  schedule  the  URLs.  For 
-calculation  of  weight,  they  used  time  as  important 
-factor.  Time  value  more  means  crawler  has  tasks 
-that  are  yet  not  completed.  It  means  it  should  not 
-get  more  tasks.  They  take  weight  and  time  as 
-reciprocal of each other. So, weight is low for that 
-node which has more time to finish its task. It uses 
-master  slave  architecture  for  scheduling  purpose. 
-The flow of this master slave is shown in figure 2. 
-
-MASTER NODE 
-
-SLAVE NODE 
-
-Node Table 
-
-Node 
-Information 
-
-Schedule 
-Module 
-
-Non Crawled 
-URLs 
-
-Get 
-URL 
-
-Store 
-URL 
-
-Assigned URLs 
-List 
-
-Remove 
-URL 
-
-Crawled URLs 
-
-Crawler 
-Feedback 
-Module 
-
-Store 
-URL 
-
-Store 
-Links 
-
-URL 
-
-URL & 
-LINKS 
-
-CRAWLER
-NODE 
-
-. 
-
-. 
-
-. 
-
-. 
-
-CRAWLER 
-NODE 
-
- 
-
-Figure 2: Master Slave Architecture of URL Scheduling 
-
-In master slave architecture, at master node various 
-data structures are used to store the information of 
-crawler node as well as status of URLs i.e. whether 
-
-they  are  scheduled  to  be  crawled  or  completely 
-crawled.  They  used  the  concept  of  Round  Robin 
-algorithm for assigning URLs to crawler.  A weight 
-is  assigned  to  each  crawler  node  and  hoping  that 
-weight will show the status of that node.  If weight 
-is low then it  means crawler is heavily loaded and 
-vice versa. The weight is assigned with the help of 
-given relation: 
-
-W=           k 
-𝑘
-      ∑ 𝑡𝑖 ∗ (𝑚 + 1)
-𝑖=1
-
- 
-
-  
-
-ti =finished time of i tasks 
-m=no. of tasks yet not finished 
-
-Where, k=no. of tasks finished recently 
+]
+E
+C
+.
+s
+c
+[
  
  
+1
+v
+5
+7
+8
+3
+1
+.
+1
+1
+1
+2
+:
+v
+i
+X
+r
+a
+
+Abstract: This paper presents a density-based topology optimization approach to design struc-
+tures under self-weight load. Such loads change their magnitude and/or location as the topol-
+ogy optimization advances and pose several unique challenges, e.g., non-monotonous behavior
+of compliance objective, parasitic eﬀects of the low-stiﬀness elements and unconstrained nature
+of the problems. The modiﬁed SIMP material interpolation in conjunction with the three-ﬁeld
+density representation technique (original, ﬁltered and projected design ﬁelds) is employed to
+achieve optimized solutions close to 0-1. Thus, parasitic eﬀects of low-stiﬀness elements are cir-
+cumvented. The mass density of each element is interpolated via a smooth Heaviside function
+yielding continuous transition between solid and void states of elements. This helps formulate
+a constraint on the maximum magnitude of the self-weight for the given volume in a such a
+manner that which implicitly imposes a lower bound on the permitted volume. The propose
+approach maintains the constrained nature of the optimization problem. Load sensitivities are
+evaluated using the adjoint-variable method. Compliance of the domain is minimized to achieve
+the optimized designs using the Method of Moving Asymptotes. Eﬃcacy and robustness of the
+presented approach is demonstrated by designing various 2D and 3D structures involving self-
+weight.
+
+Keywords: Topology optimization; Self-weight; Design-dependent loads; Heaviside projection
+function; Compliance minimization
+
+1
+
+Introduction
+
+Topology optimization (TO) is gaining popularity day-by-day as a design tool to ﬁnd the op-
+timized material distributions for a wide range of problems including single- and/or multi-
+physics concepts (Sigmund and Maute, 2013). Such problems that involve self-weight, a design-
+dependent force (Kumar et al., 2020), can provide various distinctive challenges, e.g., (1) non-
+monotonous characteristics of the compliance objective with respect to the design variables,
+(2) tendency to lose constrained nature of the compliance optimization problem with a given
+resource constraint and (3) the parasitic eﬀects of low-stiﬀness elements (Bruyneel and Duysinx,
+2005), which are also noted in maximization of eigenvalues using TO when the Solid Isotropic
+Material with Penalization (SIMP) formulation is employed (Pedersen, 2000). Civil engineering
+structures typically encounter self-weight and thus, their performance can be directly associated
+with the location of optimized material distribution (Bruyneel and Duysinx, 2005). In addition,
+consideration of the self-weight can become essential for large-scale structures. Herein, the mo-
+tif is to present a density-based TO approach covering all the above mentioned challenges to
+
+1prabhatk@iisc.ac.in; prabhatkumar.rns@gmail.com
+
+1
+
+optimize structures subject to self-weight. In a typical density-based TO approach, each ﬁnite
+element (FE) is assigned a design variable (material density) x ∈ [0, 1] that is assumed to be
+constant within the element. x = 1 and x = 0 indicate the solid and void phases of the element,
+respectively.
+
+(a)
+
+(b)
+
+Figure 1: (a) Schematic diagram of a 2D design optimization problem with self-weight and external load Fext.
+Presence of external load may not always be necessary. (b) A representative solution to the design problem
+shown in (a). Ω, Ωsolid(¯x = 1) and Ωvoid (¯x = 0) represent the actual design domain, the optimized material
+layout design (self-weight bearing structure) and void domain, respectively. ¯xe indicates the physical material
+density of element e in the parameterized setting.
+
+Design-dependent loads typically alter their location, magnitude and/or direction as TO pro-
+gresses and therefore, their sensitivities with respect to the design variables need to be ac-
+In such
+counted in the TO formulation (Kumar and Langelaar, 2021; Kumar et al., 2020).
+loading scenarios, the overall sensitivities of the compliance objective with respect to the de-
+sign variables no more remain always negative (see Sec. 3.2) and hence, compliance loses its
+most cherished monotonic characteristics (Bruyneel and Duysinx, 2005). A numerical solu-
+tion to a purely self-weight-loaded design for compliance minimization can be feasible even
+when ¯xe → 0 ∀ e|e=1, 2, 3, ··· , Nel, i.e., compliance becomes approximately equal to zero as it is
+being minimized. However, such a solution is nonsensical as per mechanical viewpoint and
+also, makes problem unconstrained (Bruyneel and Duysinx, 2005). Note, Nel is the total FEs
+employed to parameterize the design domain Ω (Fig. 1a). The parasitic eﬀects are due to low-
+stiﬀness elements wherein ratio between– gravity force to design variables and stiﬀness to design
+variables tend to become unbounded (Bruyneel and Duysinx, 2005). The proposed approach
+systematically oﬀers a solution to the above mentioned anomalies and provides the optimized
+solutions close to 0-1. A schematic diagram for a 2D structure2 experiencing self-weight (gravity
+load) and external constant load Fext is depicted in Fig. 1a. A possible solution to the problem
+(Fig. 1a) is displayed in Fig. 1b. It can be noted that location and magnitude of the gravity
+load change, which pose challenges in a TO formulation. Next, we review the TO approaches
+presented for structures subject to self-weight.
+
+In a structural optimization framework self-weight was accounted ﬁrst by Rozvany (1977).
+Subsequently, several researchers have presented their TO approaches including self-weight.
+Bruyneel and Duysinx (2005) identiﬁed challenges in a continuum-based TO framework with
+self-weight. They found that when the design variables attain their lower bounds then the ratio
+between the mass density (gravity load or self-weight) and the material stiﬀness obtained via the
+SIMP formulation tends to inﬁnity. Consequently, displacements become unbounded and that
+
+22D structure diagram is taken for the simplicity.
+
+2
+
+Gravityload(Self-weight)ΩFextSelf-weightbearingstructureΩvoidΩsolidΩvoidFextin-turn makes compliance unbounded. As a result, the optimized designs contain many gray
+elements (0 < ¯x < 1). To subdue such unrealistic gray material that causes parasitic eﬀects,
+they altered the SIMP formulation using a threshold density value ¯xth wherein the material stiﬀ-
+ness is regarded linear below ¯xth, which introduces non-diﬀerentiability in the material model.
+This paper however shows that with the modiﬁed SIMP material model (Sigmund, 2007), a
+smooth interpolation scheme, in conjunction with the three-ﬁeld density technique (Lazarov
+et al., 2016), parasitic eﬀects can be circumvented. Lee et al. (2012) employed the approach
+presented by Bruyneel and Duysinx (2005) in their stress-constrained-based TO method for
+design-dependent loads. Huang and Xie (2011) used the bi-directional evolutionary structural
+optimization approach with the RAMP material model (Stolpe and Svanberg, 2001) for design-
+ing structures subject to self-weight. Xu et al. (2013) proposed the guide-weight approach using
+the optimality criteria method. They employed the SIMP and the RAMP material models to
+demonstrate their approach. Chang and Chen (2014) presented a modiﬁed gradient projection
+method to solve problems involving density-dependent forces. Holmberg et al. (2015) employed
+the non-linear semi-deﬁnite programming for the worst-case TO with self-weight. A closed
+B-splines-based approach was proposed by Zhang et al. (2017) to avoid parasitic eﬀects of low-
+density regions for design-dependent loads. F´elix et al. (2020) employed a power-law function
+for the material density interpolation to reduce the parasitic eﬀects. Zhang et al. (2021) modi-
+ﬁed the SIMP model and used a sequence of penalty factor in their approach. They proposed
+a multi-objective TO approach wherein the objective is the weighted sum of the strain energy
+and displacements of the structures. Novotny et al. (2021) proposed a topological derivative-
+based TO approach using a regularized formulation for imposing feasible volume constraints for
+structures under self-weight.
+
+This paper presents an approach using the standard density-based TO with the modiﬁed SIMP
+scheme in conjunction with the three-ﬁeld density representation technique (original, ﬁltered and
+projected design ﬁelds, cf. Lazarov et al. (2016)) for the design problems involving self-weight.
+The parameter β associated with the three-ﬁeld technique is updated using a continuation
+scheme to achieve the optimized designs close to 0-1 and thereby, parasitic eﬀects arising due
+to the low-stiﬀness regions are circumvented. A smooth Heaviside function is employed to
+interpolate the mass density of each element, which provides a continuous transition between
+the void and solid states of the element. In addition, it helps formulate a constraint on the
+maximum magnitude of the self-weight using the given volume fraction of the domain in such a
+manner that a lower bound on the resource constraint is imposed implicitly. Consequently, the
+tendency to lose constrained nature of problem is subdued. Load sensitivities are evaluated using
+the computationally cheap adjoint-variable method. Compliance is minimized to obtain the
+optimized material layouts of various structures subject to self-weight with diﬀerent boundary
+speciﬁcations using the Method of Moving Asymptotes (Svanberg, 1987). The approach is
+readily extended for three-dimensional problems, which is demonstrated by solving two 3D
+numerical examples.
+
+The layout of this paper is organized as follows. Section 2 describes the modeling of self-weight
+using a smooth Heaviside function. Problem description including the topology optimization
+formulation and sensitivity analysis is presented in Section 3. Next, numerical examples for
+various 2D and 3D design problems involving self-weight are presented in Section 4. Pertinent
+discussions are presented, and a study for diﬀerent parameters are presented. Section 4.3
+presents three-dimensional results. Lastly, conclusions are drawn in Section 5.
+
+3
+
+2 Self-weight modeling
+
+Self-weight fg arises due to the gravitational acceleration g, which acts vertically downward. In
+a continuum setting, fg can be determined as
+
+fg = γV g = γV g e,
+
+where γ (kg m−3) is mass density of the material used, V (m3) represents volume of the domain,
+and g = ge = −9.81 m s−2e, where g = −9.81 m s−2 and e, a unit vector, directs in positive y−
+and z−directions for 2D and 3D settings respectively.
+
+In a discrete setting, the elemental self-weight f e
+
+g is evaluated as (Cook et al., 2007)
+
+γeN(cid:62)
+
+Ωe
+
+dV = γe
+
+N(cid:62)
+
+dV, (For 2D)
+
+(cid:82)
+
+
+(cid:82)
+
+
+f e
+g =
+
+(cid:41)
+(cid:40)
+0
+g
+
+0
+
+0
+
+g
 
- 
- 
- 
- 
-With  the  help  of  this  weight  value  scheduling  is 
-done.  URLs  get  scheduled  on  the  basis  of  this 
-weight value of crawler node. A threshold value is 
-taken  to  ensure  that  low  weight  crawler  node  will 
-not leave unattended.  
- 
-Advantages 
- 
-
-It  is  simple  and  efficient:-It  works  at 
-master  node  and  takes  less  time.  Due  to 
-fast nature of Round Robin Scheduling, it 
-prevents  the  crawler  from  sitting  idle.  It 
-takes less time for scheduling also. 
-
-  Supports dynamic  entry of crawler  node:-
-It has been observed in existing algorithm, 
-on  new  entry  whole  algorithm  needs  to 
-restart.  But  in  this  algorithm,  new  entry 
-doesn’t effects the working and also taken 
-into consideration at that point of time. 
-
-  No  starvation:-The  node  with 
-
-lower 
-weight doesn’t leave idle in this algorithm. 
-As  it  has  been  observed  that  existing 
-algorithm  suffers  from 
-this  starvation 
-problem.  In  this  algorithm,  all  crawler 
-nodes  get  the  chance  to  do  crawling 
-instead of its low weight. 
-
-  Error Recovery mechanism:-If some node 
-doesn’t  respond  or  crawler  node  may 
-crash, then there is recovery mechanism is 
-there in this algorithm. 
-
-Disadvantages 
-
-  Single  point  of  failure:-If  master  node 
-crashes then all information of nodes gets 
-lost.  In 
-is  no 
-this  algorithm, 
-mechanism for master node recovery. 
-  Scalability:-If  number  of  URLs  increases 
-this  algorithm  works 
-into 
-
-is  not 
-
-taken 
-
-there 
-
-then  whether 
-efficiently  or  not 
-consideration. 
-B. Hashing Algorithm 
-
-Yuan  Wan  et  al  [3]  designed  and  implemented  a 
-URL  assignment  method  based  on  hashing.  It 
-works  on  parallel  systems  [4]  where  systems  are 
-
-physically  independent  but  they  are  cooperating 
-with  each  other  through  some  mechanism.  Each 
-system  downloads  the  webpages  on  their  local 
-machine and when internal links are extracted from 
-these  webpages,  there  is  need  of  scheduling  of 
-these  URLs.  Either  they  are  scheduled  to  be 
-downloaded  on  host  machine  or  to  some  other 
-machine.  The  crawlers are not communicated  with 
-each other. Host Machine is the central coordinator 
-through  which  communication  and  scheduling 
-takes  place.  The  architecture  of  the  system  is  as 
-shown in figure 3. 
-
-X 
-
-COORDINATOR 
-
-X 
-
-CRAWLER 
-
-CRAWLER 
-
- 
-
-X 
-
-X 
-
-CRAWLER 
-
- 
-
-CRAWLER 
-
- 
-
-Figure 3: Model of Distributed Parallel Crawler  
- 
-Coordinator  assigns  the  URLs  to  different  crawler 
-based  on  its  host  name.  Host  name  decides  that 
-whether  the  URL  goes  to  other  machine  or 
-downloads on its home machine. For this purpose a 
-hashing  scheduling  algorithm  is  designed.  It  will 
-take  URL  as  input  and  then  hash  function  will 
-apply on this URL. In hashing function, host name 
-is  extracted  from  URL  then  convert  it  into  integer 
-format and will match with id of crawler. If match 
-takes place, then it will download on same machine 
-otherwise  will  go  to  other.  The  coordinator  has  id 
-of  all  registered  crawler  and  on  the  basis  of  this 
-information,  it  will  schedule  the  URLs.  The  step 
-wise execution of this algorithm is as follows: 
- 
-Step 1: Each crawler get registered to coordinator 
-and get an ID which is in integer form. 
-       2: Apply hash function to each URL. 
-          2.1Keyi=(∑ 𝑇𝑟𝑎𝑛𝑠𝑓𝑒𝑟(ℎ𝑜𝑠𝑡(𝑈𝑅𝐿𝑖)
-// Here, transform convert the host into integer 
-      3: At coordinator, if (key==ID) 
-         3.1 If (URL exists in the URL_List), then 
- 
-     4: Else 
-         4.1 save the URL 
-        4.2 Send to coordinator 
-    5: End 
- 
-Advantages 
- 
-
-3.1.1 Save the page  
-
-It  prevents  duplicate  URLs  to  download 
-again. It partitioned the URLs list in such 
-a  way  that  ensures  that  no  URL  repeated 
-at any machine. 
-
-mod n 
-
-𝑙
-𝑖=1
-
- 
-
- 
-
- 
-
- By  preventing  repeated  access  of  same 
-URL  at  different  machine  also  saving 
-bandwidth  and  network  resources  very 
-well. 
-Disadvantages 
-
- 
-
- 
-
-It  is  not  scalable  i.e.  if  number  of  URLs 
-increases  then  it  is  not  sure  that  they 
-performed in same manner as it does now. 
-It  has  single  point  of  failure.  It  works 
-according  to  coordinator  directions  and  if 
-coordinator  crashes  whole  algorithm  goes 
-down and system stops working. 
- 
-C. Popularity based 
-
-Chandramouli et al [5] proposed the URL ordering 
-based  on  popularity.  In  this  technique,  web  logs 
-available on website were used for calculating total 
-access  counts  for  each  URL.  URL  ordering  were 
-classify  into  two  approaches.  One  is  non  learning 
-algorithms 
-that  uses  predetermined  ordering 
-function  and  other  is  learning  algorithms  that  will 
-orders  the  URLs  based  on  training  set  of  URLs 
-with quality information.  
-In  non-learning  algorithm,  high  the  access  count 
-the  more  important  is  the  page.  But,  it  is    also 
-suggested that it may case that website owner itself 
-access  its  website  several  times  and  this  cause 
-increase 
-in  access  count  and  considered  as 
-important page. To avoid such situation,  four types 
-of  accesses  to  a  website  were  considered.  These 
-are: 
-
-1.  Total  External  Count:-  access  to  URL  on 
-website from outside the local network 
-2.  Unique  External  Count:-  unique  access 
-
-from outside the local network 
-
-3.  Total  Internal  Count:-  access  to  URL  on 
-
-website from local network 
-
-4.  Unique  Internal  Count:-  unique  access 
-
-from local network 
-
-Thus,  by  calculating  all  above  access  count  by 
-using the given below relation, total access count is 
-obtained. 
-
-Total= TEC+UEC+TIC+UIC 
-
- 
-To  predict  the  importance  of  every  count  value 
-their  accuracy  is  calculated  and  then  assigns 
-weights to each count  value  with the  help of these 
-accuracy values. Thus weighted score of each URL 
-is calculated as follows: 
- 
-WeightScore=a*TECacc/Total+b*UECacc/Total+c*
-TICacc/Total+d*UICacc/Total 
- 
-
- 
-Where, TECacc =TEC accuracy algorithm 
- 
-
-UECacc =UEC accuracy algorithm 
-TICacc    = TIC accuracy algorithm 
-UICacc   = UIC accuracy algorithm 
- 
-a, b, c, d are raw external, unique external, internal 
-and unique internal counts for the URL. 
- 
-
- 
-
- 
-
- 
-
- 
-
-Web 
-Service 
-
-Info Bot 
-
-Web Server 
-
-Search 
-Engine 
-
-It consists of following components:- 
-
-In  learning  algorithm,  best  combination  of  above 
-four  count  values  was  used.  Two 
-learning 
-algorithms  were  implemented, Total Access Count 
-Learning 
-(TAC-L)  and  Split  Access  Count 
-Learning  (SAC-L).  Both  algorithms  have  training 
-and  testing  phases.  In  these  algorithms,  access 
-counts  as  input  and  supplied  to  any  learning 
-algorithm like decision tree or k-nearest neighbour 
-and model is prepared. To measure the quality of a 
-page,  Page  Rank  algorithm  was  used.  Higher  the 
-rank,  more  important  is  the  page.  The  working  of 
-learning algorithm is shown in figure 4. 
- 
-
-Web Logs 
-
-Web Log 
-Harvester 
-
-Access 
-Count File 
-
-Ordered 
-List of URLs 
-
- 
-
-URL 
-Ordering 
-Module 
-
-Page Rank 
-Values for 
-URLs on 
-website 
-
-WEBSITE DOMAIN 
-
-WORLD 
-
-Figure 4: Popularity Based Architecture of Search System 
-
- 
-
- 
-Here, Web log server files are used to calculate the 
-access counts of each URL and supplied as input to 
-learning  algorithm.  With  the  help  of  Page  Rank 
-algorithm, URL can be ordered and provide to Info 
-Bot for crawling. 
- 
-Advantages  
- 
-
-It  works on popularity of URLs, it  means 
-it  considers  users’  interest  while  ordering 
-the URLs. 
-It  put  less  burdens  on  search  engine  as 
-each website maintains its own log file. 
-It  is  better  than  BFS.  It  doesn’t  miss 
-important pages which are in deeper depth 
-of websites. 
-
- 
-
- 
-
- 
-Disadvantages 
-
-It works on small data set. 
-
- 
-  As  it  considers  popularity  factor  for  URL 
-ordering  so  it  may  case  that  this  factor 
-may be manipulated. 
-It  doesn’t  work  on  new  pages  which  are 
-added later in the website. 
-
- 
-
- 
-D. Dynamic URL Assignment 
-A.Guerriero  et  al  [6]  proposed  a  dynamic  URL 
-assignment  method  based  on  fuzzy  clustering.  It 
-worked  on  the  principle  that  making  clustering  of 
-URLs  and  then  scheduled  them.  Clustering  should 
-
-be done in such a way that same URL shouldn’t be 
-crawled  by  multiple  crawlers.  Assignment  should 
-be done in such a way that unique crawling is done 
-and it should be in optimizing manner.  
-A  distributed  architecture  of  parallel  web  crawler 
-in 
-was  proposed. 
-efficient manner in order to get desired results. The 
-architecture is shown in figure 5. 
- 
-
-Its  components  cooperate 
-
-BROKER 
-
-DB 
-
-DEALER 
-
-CRAWLER 1 
-
-Cache 1 
-
-CRAWLER N 
-
-Cache n 
-
-Figure 5: Dynamic Assignment of URL model 
-
- 
-
-1.  Broker 
-
-It  is  responsible  for  scheduling  of  URLs 
-and  also  to  create  communication  link 
-between crawler and database. It picks the 
-URL  form  database  and  with  the  help  of 
-dealer scheduled it to crawlers. 
-
-2.  Dealer 
-
-3.  Crawlers 
-
-It  is  responsible  for  crawler  efficient 
-working.  It  manages  load  optimization 
-with the help of fuzzy clustering method.  
-
-It  is  the  module  which  is  responsible  of 
-crawling the web and downloads the page 
-in database. 
-
- 
-Following are the steps of working: 
-Step 1:  Get the URL form database. 
-
-2:  Divide  the  URL  structure  into  different 
-components  as  mentioned  by  URI  standards 
-[7].  
-3: Apply Hash function to each component and 
-convert it into integer form.  
-4: Represent integer URL components into 3D 
-coordinates. 
-
-        5: Apply Fuzzy Clustering [8] to these URLs.    
-        6: Assign these clusters to different crawlers  
-        for crawling. 
-        7: Extracted links checks for duplicity with  
-         already stored in database. 
-
- 7.1 If already found in database, then 
- 
- 
- 
-
-7.1.1 Discard 
-Else 
-7.1.2 Stored in database. 
-
- 
- 
- 
-        8: Go to Step 1. 
-        9: End. 
-
- 
-Advantages: 
- 
-
-Disadvantages 
-
-It  checks  for  duplicity.  It  means  prevents 
-downloading of same URLs again & again 
-and thus prevents bandwidth. 
-It maintains load on the system efficiently 
-by assigning clusters to crawlers. 
-
- 
-
-  Communication  Link  failure.  It  highly 
-its 
-depends  upon  communication  for 
-working  and  if  link  lost  whole  algorithm 
-fails. 
-
-  Single  point  of  failure.  One  system  is 
-treated  as  broker  and  broker  initiates  the 
-algorithm.  So,  if  this  system  crashes, 
-broker lost and algorithm fails. 
- 
-
-IV. 
-
-Conclusion 
-
-Crawler  plays  an  important  role  in  gathering  data 
-and  stored  in  database.  It  is  the  responsibility  and 
-objectives of crawler to maintain database rich and 
-fresh.  In  order  to  achieve  these  two  objectives  i.e. 
-rich  and  fresh,  crawler  has  to  order  URLs.  This 
-URL  Ordering  helps  the  crawler  to  maintain  the 
-richness  and  freshness  of  database.  A  comparison 
-table  of  different  methods  of  URL  ordering  is 
-shown below: 
-
-URL 
-Hash 
-
-Table 1: Comparison of URL ordering 
-Task 
-Schedu
-ling 
-Round 
-Robin 
-
-Popularit
-y Based 
-
-Hashin
-g  
-
-Links 
-Count 
-
-Dynamic 
-URL 
-
-Fuzzy 
-clustering 
-
-Algorith
-m 
-
-Techniqu
-e Used 
-
-Descripti
-on 
-
-Clustering 
-is  done  to 
-schedule 
-URLs. 
-
-External 
-and 
-internal 
-links 
-is 
-count 
-calculate
-d.  
-
-Works 
-on 
-round 
-robin 
-policy 
-i.e. 
-every 
-crawler 
-its 
-get 
-turn 
-and 
-weight 
-assigne
-d 
-get 
-surety 
-of  load 
-balanci
-ng 
-
-Hashin
-g 
-of 
-URL  is 
-done. 
-In 
-hashin
-g 
-method 
-host  is 
-find 
-out and 
-then 
-convert 
-the 
-charact
-ers into 
-its 
-integer 
-equival
-ent  and 
-matche
-d  with 
-crawler
-’s ID. 
-
-Input 
-
-Time 
-
-URL 
-
-URL 
-
-Efficie
-nt 
-
-Resource 
-Utilizatio
-n 
- Duplicity 
-Check 
-Recovery  Yes 
-
-Yes 
-
-Advantag
-es 
-
-Simple 
-& 
-efficien
-no 
-t, 
-starvati
-on, 
-load 
-balanci
-ng 
-Scalabi
-lity, 
-Single 
-point of 
-failure 
-
-Disadvant
-ages 
-
-Link 
-Count 
-No 
-consider
-ation 
-No 
-
-Not 
-applicabl
-e 
-Simple 
-and 
-better 
-than 
-BFS, less 
-burden 
-on 
-search 
-engines 
-Small 
-data  set, 
-not 
-applicabl
-e  to  new 
-pages 
-
-Efficient  
-
-Yes 
-
-No 
-
-Efficient, 
-Load 
-balancing, 
-remove 
-duplicates, 
-low cost 
-
-Dependen
-cy 
-on 
-communic
-ation  link, 
-single 
-point 
-failure 
-
-of 
-
-Efficie
-nt 
-
-Yes 
-
-Not 
-Consid
-er 
-Fast, 
-Load 
-balanci
-ng 
-
-Lack 
-of 
-scalabil
-ity, less 
-realisti
-c, 
-single 
-point 
-of 
-failure 
-
- 
-In  task  scheduling  time  is  taken  as  scheduling 
-criteria  that  is  less  time  taken  URLs  will  be 
-schedule  first  while  popularity  based  took  number 
-of  links  on  that  URL  as  scheduling  criteria.  URL 
-Hash  and  Dynamic  URL  both  took  URL  itself  as 
-scheduling  criteria.  They  work  on  URL  and  then 
-decide their order for crawl. 
- 
-
-REFERENCES 
-
-[1] Deepika, Dixit Ashutosh, “Web Crawler Design 
-Issues:  A  Review”,  published  in  International 
-Journals  of  Multidisciplinary  research  Academy 
-(IJMRA) in August 2012. 
-[2]  Dajie  Ge  ,  Zhijun  Ding  ,  ‘A  Task  Scheduling 
-Strategy  based  on  Weighted  Round-Robin  For 
-Distributed Crawler’, IEEE/ACM  7th International 
-Conference on Utility and Cloud Computing, 2014. 
-[3]  Y.  Wan,  H.  Tong.  –  “URL  Assignment 
-Algorithm of Crawler in Distributed System Based 
-on  Hash”.  -  IEEE  International  Conference  on 
-Networking,  Sensing  and  Control,  ICNSC  2008, 
-Hainan,  China,  6-8  April  2008.  pages  1632-1635, 
-IEEE, 2008. 
-[4]  M.  Marin,  R.  Paredes  and  C.  Bonacic,  “High-
-performance priority queues for parallel crawlers,” 
-Proceedings  of  the  10th  ACM  workshop  on  Web 
-
-information  and  data  management,  October  2008, 
-pp. 47-54. 
-[5]  Arvind  chandramouli  ,  Susan  gauch  and  Josua 
-eno  ”A  popularity-based  URL  ordering  Algorithm 
-for  Crawlers”,    May  13-15  2010”  3rd  Conference 
-on Human System. 
-[6] A Guerriero, F. Ragni, C. Martines, "A dynamic 
-URL assignment method for parallel web crawler", 
-IEEE International Conference, 2010. 
-[7]  http://tools.ietf.org/html/rfc3986  -  RFC  3986  / 
-STD  66  (2005)  –  the  current  generic  URI  syntax 
-specification. 
-[8]  Applying  Preference-based  Fuzzy  Clustering 
-Technology  to  Improve  Grid  Resources  Selection 
-Performance - Dong Guo, Liang Hu, Shilan Jin and 
-Bingxin  Guo  -  Fourth  International  Conference  on 
-Fuzzy  Systems  and  Knowledge  Discovery  (FSKD 
-2007). 
-[9]  LI  Xiao-Ming,  and  FENG  Wang-Sen.  "Two 
-Effective  Functions  on  Hashing  URL"  Journal  of 
-Software, 2004. 
-[10] B. Debnath, S. Sengupta, J. Li, D.J. Lilja, and 
-D.H.C.  Du,  “BloomFlash:Bloom  filter  on  flash-
-based storage,” 2011 31st International Conference 
-on Distributed Computing Systems, June 2011, pp. 
-635-644. 
-[11]  Christopher  Olston,  Marc  Najork  "Web 
-Crawling", Foundations and Trends in Information 
-RetrievalVol. 4, NO. 3 (2010) 
-[12]  Wani  Rohit  Bhaginath,  Sandip  Shingade, 
-Mahesh  Shirole,  “Virtualized  Dynamic  URL 
-IEEE 
-Assignment  Web  Crawling  Model”, 
-International  Conference 
-in 
-Engineering  &  Technology  Research  (ICAETR  - 
-2014) 2014. 
- 
-
-on  Advances 
+
+
+
+
+
+(cid:82)
+
+Ωe
+
+(cid:82)
+
+(cid:41)
+(cid:40)
+0
+g
+
+0
+
+0
+
+g
+
+
+
+
+
+
+γeN(cid:62)
+
+Ωe
+
+dV = γe
+
+N(cid:62)
+
+Ωe
+
+dV, (For 3D)
+
+where N = [N1I, · · · NNnoI]. I is the identity matrix in Rn, n indicates dimension of the domain
+wherein n = 2 and n = 3 for 2D and 3D cases respectively. Nno is the total number of nodes
+per element employed to discretize the design domain. We use four-noded quadrilateral and
+eight-noded hexahedral ﬁnite elements (FEs) Ωe to describe the two- and three-dimensional
+design domains respectively, i.e, Nno = 4 (2D) and Nno = 8 (3D).
+
+e (mass density of void FE) and γe = γs
+
+In a typical TO framework, each ﬁnite element displays solid (¯xe = 1) and void ( ¯xe = 0)
+material phases; ¯xe denotes the physical material variable of element e (see Sec. 3). Herein, the
+material density γe of each FE is related to ¯xe wherein elements with ¯xe = 0 and ¯xe = 1 have
+γe = γv
+e (mass density of solid FE) material density
+respectively. A smooth Heaviside function is employed to evaluate the material density of each
+FE using its both states that oﬀers continuous transition between the phases of the element
+as TO progresses. In addition, it helps (i) evaluate the load sensitivities (see Sec.3.2) readily
+using the adjoint-variable method and (ii) formulate a constraint using the maximum amount of
+self-weight permitted that implicitly provides a lower bound on the resource volume and at the
+end of the TO iteration the volume constraint is noted active (see Sec. 4.1.1). Mathematically,
+the mass density interpolation is written as
+
+γe = γv
+
+e + (γs
+
+e − γv
+
+e ) H(¯xe, ηγ, βγ),
+
+where χ = γv
+= 1e−9 is used; χ is termed the mass density contrast. The smooth Heaviside
+e
+γs
+e
+projection function H(¯xe, ηγ, βγ) is deﬁned using the physical design variables as (Wang et al.,
+2011)
+
+H(¯xe, ηγ, βγ) =
+
+tanh(βγηγ) + tanh(βγ(¯xe − ηγ))
+tanh(βγηγ) + tanh(βγ(1 − ηγ))
+
+,
+
+where both ηγ and βγ are adjustable parameters that provide the position of step and the slope.
+ηγ and βγ are called the mass density parameters. Fig. 2 depicts mass density interpolation
+function for diﬀerent ηγ and βγ. For higher βγ more sharpness can be noted (Fig. 2).
+
+In view of shape functions of quadrilateral (2D) and hexahedral (3D) elements in association
+with the Gauss-quadrature points, (2) gives (Cook et al., 2007)
+
+g = γs
+f e
+
+e (χ + (1 − χ) H(¯xe, ηγ, βγ)) LgVe,
+
+4
+
+(1)
+
+(2)
+
+(3)
+
+(4)
+
+(5)
+
+Figure 2: Mass density interpolation plot
+
+where Lg = (cid:2)0, g
+
+4 , 0, g
+
+(cid:3)(cid:62) and
+
+4
+
+4 , 0, g
+(cid:104)
+0, 0,
+
+4 , 0, g
+g
+8
+
+Lg =
+
+, 0, 0,
+
+, 0, 0,
+
+, 0, 0,
+
+, 0, 0,
+
+, 0, 0,
+
+g
+8
+
+g
+8
+
+g
+8
+
+g
+8
+g
+8
+
+,
+
+g
+8
+(cid:105)(cid:62)
+g
+8
+
+0, 0,
+
+, 0, 0,
+
+for 2D and 3D settings respectively, and Ve = V
+(3D).
+Lx, Ly, Lz and t represent the length, width, height and thickness of the design domain. The
+derivatives of gravity force f e
+
+g with respect to ¯xe can be readily evaluated as
+
+(2D), Ve = V
+
+N el = LxLyLz
+
+N el = LxLyt
+
+Nel
+
+Nel
+
+(cid:18)
+
+= γs
+e
+
+∂f e
+g
+∂ ¯xe
+
+χ + (1 − χ)
+
+∂H(¯xe, ηγ, βγ)
+∂ ¯xe
+
+(cid:19)
+
+LgVe,
+
+(6)
+
+where
+
+∂H(¯xe, ηγ, βγ)
+∂ ¯xe
+
+= βγ
+
+1 − tanh (βγ(¯xe − ηγ))2
+tanh(βγηγ) + tanh(βγ(1 − ηγ))
+
+.
+
+Finally, the elemental forces are assembled to determine the total (global) gravity load Fg
+experienced by the design in a discrete setting and thus, compliance of the domain and ∂Fg
+∂ ¯x are
+evaluated. Next, the problem formulation is presented.
+
+3 Problem formulation
+
+The density-based topology optimization in conjunction with the three-ﬁeld density formulation
+(Lazarov et al., 2016) is used in the presented approach. For the material interpolation, the
+modiﬁed SIMP formulation (Sigmund, 2007) is employed that relates modulus of elasticity Ee
+of element e to its physical design variable ¯xe using the power law as
+
+Ee(¯xe) = Ev
+
+e + (Es
+
+e − Ev
+
+e ) (¯x)p,
+
+(7)
+
+5
+
+e and Es
+
+where Ev
+tively. The material contrast, i.e. Ev
+e
+Es
+e
+set to 3 that guides TO convergence towards ’0-1’ designs.
+
+e are the Young’s moduli of the void and the solid phases of element e, respec-
+= 1 × 10−6 is set and p, the SIMP penalty parameter, is
+
+In the three-ﬁeld (x, ˜x, ¯x) density representation technique (Lazarov et al., 2016), x, ˜x and
+¯x denote vectors containing the original design variables xe, ﬁltered design variables ˜xe and
+physical design variables ¯xe respectively. The chain of transformation between these variables
+can be denoted via xe → ˜xe → ¯xe (Lazarov et al., 2016).
+
+The ﬁltered variables ˜xe, determined using a mesh-independent density ﬁltering scheme (Bruns
+and Tortorelli, 2001), is given as
+
+where nne indicates the total number of neighboring elements of element e, vi is the volume of
+the element i. w(xi), the weight function, is determined using the Euclidean distance between
+the centroids xe and xi of elements e and i as
+
+where rﬁll is the employed ﬁlter radius. The derivatives of ˜xe with respect to xi is calculated as
+
+˜xe =
+
+(cid:80)nne
+i=1 vixiw(xi)
+(cid:80)nne
+i=1 viw(xi)
+
+,
+
+(cid:18)
+
+w(xi) = max
+
+0, 1 −
+
+||xe − xi||
+rﬁll
+
+(cid:19)
+
+,
+
+∂ ˜xe
+∂xi
+
+=
+
+viw(xi)
+j=1 vjw(xj)
+
+(cid:80)nne
+
+.
+
+The physical design variable ¯xe, determined using corresponding ﬁltered variable ˜xe and a
+smooth Heaviside function which is analogous to (4), is given as
+
+¯xe = H(˜xe, β, η)|η=0.5 =
+
+tanh( β
+
+2 ) + tanh(β(˜xe − 1
+
+2 ))
+
+2 tanh( β
+2 )
+
+where β ∈ [1, ∞) controls the sharpness of the Heaviside function H(˜xe, β, η). Typically β
+is increased in a continuation fashion from its initial value βi = 1 to maximum value βmax
+to achieve the solution close to 0-1 (Wang et al., 2011). In turn, parasitic eﬀects of the low-
+density element can be suppressed. Herein, βmax = 256 is set, and is doubled after every 25
+optimization iterations. With η = 0 and η = 1, one achieves the minimum length scale on the
+void and solid phase respectively (Trillet et al., 2021; Wang et al., 2011), and also, attains the
+Heaviside approximation given by Guest et al. (2004) and Sigmund (2007) respectively. One
+determines the derivative of ¯xe with respect to ˜xe as
+
+Using the chain rule, the derivative of a function f with respect to the actual design variable
+can be determined in view of (10) and (12) as
+
+(8)
+
+(9)
+
+(10)
+
+(11)
+
+(12)
+
+(13)
+
+∂ ¯xe
+∂ ˜xe
+
+= β
+
+1 − tanh(β(˜xe − 1
+2 tanh( β
+2 )
+
+2 ))2
+
+.
+
+∂f
+∂xi
+
+=
+
+nne
+(cid:88)
+
+e=1
+
+∂f
+∂ ¯xe
+
+∂ ¯xe
+∂ ˜xe
+
+∂ ˜xe
+∂xi
+
+,
+
+6
+
+wherein ∂f
+∂ ¯xe
+
+can be determined for the given objective function (see Sec. 3.2).
+
+3.1 Topology optimization formulation
+
+The compliance (strain energy) of the structures subject to self-weight and/or external constant
+load is minimized to obtain the optimized topologies. The optimization problem is formulated
+as
+
+f0 = 2SE = (Fg(¯x) + κFext)(cid:62)u(¯x)
+
+min
+¯x(˜x(x))
+
+Subject to:
+
+λ :
+Λ1 :
+
+Λ2 :
+
+K(¯x)u(¯x) = Fg(¯x) + κFext
+g1 ≡ V (¯x) ≤ V ∗
+Nel
+(cid:88)
+
+g2 ≡ Fmax
+
+g ≤
+
+Fe
+g
+
+e=1
+
+0 ≤ ¯x ≤ 1
+
+Data: V ∗, Fext, γs, g, Lx, Ly, Lz, t, Es
+
+e , κ
+
+
+
+
+
+
+,
+
+(14)
+
+where f0 represents the objective function, i.e., compliance of the structure, Fg and Fext are
+the global force vectors arise due to the self-weight and external loads respectively, and SE
+indicates the strain energy. K and u are the global stiﬀness matrix and the displacement vector
+respectively. g1 and g2 are constraints. V (x) and V ∗ are the design volume and permitted
+volume respectively. V ∗ = V ∗
+f is the permitted volume fraction. λ (vector),
+Λ1 (scalar) and Λ2 (scalar) are the Lagrange multipliers corresponding to the state equations,
+g1 and g2 respectively.
+
+f × Nel, where V ∗
+
+Constraint g2 is formulated using the maximum self-weight determined using the permitted
+volume, Fmax
+g = gV ∗γs, and the intermediate self-weight of the evolving design, wherein Fe
+g
+indicates self-weight of element e. This constraint is applied such that a lower bound on the
+volume fraction can be realized implicitly. Sec. 4.1.1 substantiates the requirement of this
+constraint for a given volume via numerical examples. The approach retains the constrained
+nature of the problem. For the ﬁnite element analysis, the small elastic deformation is assumed
+herein.
+
+3.2 Sensitivity analysis
+
+A gradient-based optimization technique, the Method of Moving Asymptotes (MMA cf. Svan-
+berg (1987)), is employed to solve the optimization problem mentioned in (14). Thus, derivatives
+of the objective and constraints with respect to the design variables are required. The deriva-
+tives of objective are determined via the adjoint-variable approach. For that, the augmented
+response L is deﬁned using the objective and the state equations as
+
+L = f0(u(¯x)) + λ(cid:62) (K(x)u(x) − Fg(x) − κFext) ,
+
+(15)
+
+where λ is the multiplier vector. We henceforth for brevity omit the arguments from the vector
+and the matrix quantities. Diﬀerentiation of (15) with respect to ¯x yields
+
+∂L
+∂ ¯x
+
+=
+
+=
+
+∂f0
+∂ ¯x
+∂f0
+∂ ¯x
+
++
+
++
+
+∂u
+∂ ¯x
+
+∂f0
+∂u
+(cid:18) ∂f0
+∂u
+
+(cid:124)
+
+(cid:123)(cid:122)
+Θ
+
++ λ(cid:62)
+
+u + K
+
++ λ(cid:62)K
+
++ λ(cid:62)
+
+u −
+
+−
+
+∂u
+∂ ¯x
+(cid:18) ∂K
+∂ ¯x
+
+(cid:19)
+
+∂Fg
+∂ ¯x
+
+(cid:19)
+
+.
+
+∂Fg
+∂ ¯x
+
+(cid:18) ∂K
+∂ ¯x
+∂u
+∂ ¯x
+
+(cid:19)
+
+(cid:125)
+
+7
+
+λ is selected such that Θ = 03 that yields, λ = −2u and thus, with f0 = 2SE, one writes
+
+∂L
+∂ ¯x
+
+− 2u(cid:62)
+
+=
+
+∂f0
+∂ ¯x
+= −u(cid:62) ∂K
+∂ ¯x
+
+u +
+
+(cid:19)
+
+(cid:18) ∂K
+∂ ¯x
+
+u −
+
+∂Fg
+∂ ¯x
+2u(cid:62) ∂Fg
+∂ ¯x
+(cid:123)(cid:122)
+(cid:125)
+(cid:124)
+Self-weight sensivities
+
+.
+
+(16)
+
+In (16), self-weight sensitivities, 2u(cid:62) ∂Fg
+∂ ¯x appear and they are evaluated using (6). Next, the
+chain rule (13) is employed to evaluate the objective sensitivities with respect to the design
+vector, i.e., ∂f0
+∂x . Finding sensitivity of constraint g1 is straightforward (Sigmund, 2007), whereas
+that of constraint g2 can be evaluated using (6). Moreover, it can be noted that compliance
+objective sensitivities can either be negative or positive (16), i.e., they alter their sign as per
+the diﬀerent design variables. This shows the non-monotonous behavior of compliance when
+self-weight is considered, which is taken care by the MMA optimizer.
+
+4 Numerical Examples and Discussions
+
+(a)
+
+(b)
+
+Figure 3: Design domains (a) Example 1: Arch geometry with dimension Lx × Ly = 2 m × 1 m (b) Example 2: A
+symmetric MBB beam design with dimension Lx
+2 × Ly = 2 m × 1 m is subject to its self-weight and external load
+Fext. Lx and Ly indicate the length in x− and y−directions respectively. Gravity load g is indicated by parallel
+arrows. Fext is an external load.
+
+Herein, the eﬃcacy and robustness of the proposed method is demonstrated by optimizing
+various structures with self-weight and/or constant external loads. Both, 2D and 3D design
+settings are considered. The design domains with boundary conditions are displayed in their
+respective section. Lx, Ly and Lz are used to indicate length in x−, y− and z−directions
+respectively. Thickness of the domain is represented by t which is set to 0.01 m for the presented
+2D problems. We use Nex × Ney bilinear quadrilateral ﬁnite elements to describe the 2D design
+domains, whereas 3D domains are represented via Nex × Ney × Nez hexahedral FEs. Nex, Ney
+and Nez denote the total number of FEs employed in x−, y− and z−directions respectively. A
+density-based TO approach is employed wherein each element is assigned one design variable
+which is considered constant within the element. TO process is initialized using the given volume
+fraction.The external move limit of the optimizer is set to 0.1. The Youngs’ modulus and mass
+density of the material are set to 210 GPa and 7850 kg m−3 respectively (Xu et al., 2013). The
+total number of the MMA iterations is set to 250 unless otherwise stated. As mentioned earlier,
+β (11) is doubled after every 25 MMA iterations until it reaches its maximum value 256 and
+thereafter, it remain so for further iterations.
+
+3This is the adjoint equation of the optimization problem (14).
+
+8
+
+Lx=2mLy1mgLx2=2mLy1mgFext4.1 2D design problems
+
+We ﬁrst present various 2D (benchmark) design-problems experiencing self-weight herein.
+
+4.1.1 Example 1: Self-weight loadbearing arch geometry
+
+The design domain for the self-weight loadbearing arch structure is depicted in Fig. 3a. Both
+ends of the bottom edge are ﬁxed (Fig. 3a), and no external force is applied (κ = 0). Lx = 2 m
+. The mass density
+and Ly = 1 m are taken. Filter radius is set to 2.5 × max
+parameters ηγ = 0.01 and βγ = 8 are used (4). The permitted volume fraction is set to 0.25.
+
+(cid:16) Lx
+Nex
+
+, Ly
+Ney
+
+(cid:17)
+
+Qualifying constraint g2
+
+Problems exclusively with self-weight under a volume constraint lose their constrained nature
+(Bruyneel and Duysinx, 2005). To prevent this tendency, additional constraint g2 which im-
+plicitly ensures a lower bound on the resource volume in conjunction with the presented mass
+density interpolation scheme (3) and employed three-ﬁeld density representation technique is
+considered. The constraint is qualiﬁed and substantiated its importance by optimizing the arch
+design (Fig. 3a) with self-weight (14) using diﬀerent cases.
+
+To parameterize the design domain, (i) Nex × Ney = 100 × 50 FEs and (ii) Nex × Ney = 200 × 100
+FEs are used. This is done to record the behavior of the approach with respect to diﬀerent
+mesh sizes. In addition, though the problem is symmetric, the full model is considered to note
+any tendency to lose the symmetry in the optimized design. Four cases namely, (i) CASE I:
+100×50 FEs without constraint g2, (ii) CASE II: 100×50 FEs with constraint g2, (iii) CASE III:
+200 × 100 FEs without constraint g2, and (iv) CASE IV: 200 × 100 FEs with constraint g2 are
+considered.
+
+(a) f0 = 1.92 × 10−2 N m
+Vf = 0.047
+
+(b) f0 = 1.2 × 10−4 N m
+Vf = 0.25
+
+(c) f0 = 0.2 × 10−4 N m
+Vf = 0.065
+
+(d) f0 = 1.5 × 10−4 N m
+Vf = 0.25
+
+Figure 4: The optimized results to Example 1 with various cases. (a) CASE I: 100 × 50 FEs without constraint g2
+(b) CASE II: 100 × 50 FEs with constraint g2, (c) CASE III: 200 × 100 FEs without constraint g2, (d) CASE IV:
+200 × 100 FEs with constraint g2. The optimized solution displayed in (a) is disconnected as encircled in red. Vf
+indicates the obtained volume fraction at the end of optimization.
+
+The optimized results for all the cases are displayed after 250 MMA iterations in Fig. 4. When
+constraint g2 is not taken into account, for example in CASE I and CASE III, the optimization
+problem becomes unconstrained as evident from their volume constraint convergence plots (see
+Fig. 5a and Fig. 5b). The optimized design of CASE I contains gray elements (marked in
+red circles in Fig. 4a). On the other hand, with constraint g2 (CASE II and CASE IV) the
+optimization problem retains its constrained nature and at the end of TO, volume constraint g1
+stays active (Fig. 5a and Fig. 5b). Steps in volume fraction convergence curves are due to β
+updation scheme (11) which is performed to achieve 0-1 optimized solutions (Wang et al.,
+2011). Constraints convergence plots for CASE II and CASE IV are displayed in Fig. 6a
+
+9
+
+(a)
+
+(b)
+
+Figure 5: Volume fraction convergence plots for CASE I, CASE II, CASE III, CASE IV.
+
+(a)
+
+(b)
+
+Figure 6: Constraints convergence plots. (a) CASE II and (b) CASE IV.
+
+(a) Optimized arch structure
+
+(b)
+
+Figure 7: (a) Optimized arch design, Vf = 0.40, f0 = 4.7 × 10−4 N m, (b) Volume fraction convergence curve
+
+and Fig. 6b respectively. Constraints are active at the end of optimization. The optimized
+designs of CASE II (Fig. 4b) and CASE IV (Fig. 4d) are close to 0-1 solutions. Topologies
+of these solutions resemble those reported in (Bruyneel and Duysinx, 2005; Huang and Xie,
+
+10
+
+Figure 8: Objective convergence history of the arch structure with intermediate results.
+
+2011; Novotny et al., 2021). Furthermore, these solutions (Fig. 4b and Fig. 4d) are symmetric
+with respect to the central y−axis of the domain and thus, symmetry nature of the problem is
+retained. We henceforth solve all problems with constraint g2 and report convergence history
+for constraint g1 only in view of Fig. 6.
+
+4.1.2 Arch structure
+
+The design domain (Fig. 3a) is described using Nex × Ney = 400 × 200 FEs. The volume fraction
+(cid:17)
+is set to 0.40. ηγ = 0.1 and βγ = 8 are considered. Filter radius is set to 3.5 max
+.
+Other design parameters are same as those employed in Sec. 4.1.1.
+
+(cid:16) Lx
+Nex
+
+, Ly
+Ney
+
+The optimized result is depicted in Fig. 7a, and the corresponding convergence curves for the
+volume fraction the objective are displayed in Fig. 7b and Fig. 8 respectively. The design
+evolution at diﬀerent intermediate stages are also shown (Fig. 8). The objective convergence is
+smooth and relatively rapid. As β increases, the boundaries of the solution become crisp, and
+the optimized solution moves towards 0-1 design (Fig. 8). The volume constraint is active and
+satisﬁed at the end of optimization and thus, constrained nature of the problem is maintained.
+As β (11) is updated at every 25 MMA iterations, corresponding steps in volume fraction can
+be noted (Fig. 7b).
+
+4.1.3 Example 2
+
+A Messerschmitt-Blkow-Blohm (MBB) beam design subject to self-weight as well as an external
+load is studied in this example.
+
+11
+
+(a) V ∗
+
+f = 0.3
+
+(b) V ∗
+
+f = 0.4
+
+(c) V ∗
+
+f = 0.5
+
+Figure 9: Optimized designs for the MBB beam design
+
+In view of symmetric nature of the problem, the right symmetric part (Fig. 3b) with dimension
+Lx
+2 = 2 m and Ly = 1 m is considered. Magnitudes of the external load, applied as shown in
+Fig. 3b in the negative y−direction, are set to κFmax
+g with κ = [0, 1]. The boundary conditions of
+the problem are as depicted in Fig. 3b. The domain is parameterized using Nex×Ney = 320×160
+FEs. The ﬁlter radius is set to 3 × max
+. Other parameters are same as used in
+Sec. 4.1.1. In this study, two main cases are considered.
+
+(cid:16) Lx
+Nex
+
+, Ly
+Ney
+
+(cid:17)
+
+(a) Objective convergence plots
+
+(b) Volume fraction convergence plots
+
+Figure 10: Converge plots for the compliance and diﬀernt volume fractions.
+
+(a) κ = 1 and self-weight
+
+(b) κ = 0.75 and self-weight
+
+(c) κ = 0.5 and self-weight
+
+(d) κ = 0.25 and self-weight
+
+(e) κ = 0.1 and self-weight
+
+(f) κ = 0 and self-weight
+
+(a)f0 = 3.83 × 10−2 N m, (b) f0 =
+Figure 11: Optimized results to the MBB beam with diﬀerent κ.
+2.64 × 10−2 N m, (c) f0 = 1.73 × 10−2 N m, (d) f0 = 0.83 × 10−2 N m, (e) f0 = 0.45 × 10−2 N m, (f) f0 =
+0.24 × 10−2 N m
+
+First, the beam is optimized with κ = 0, i.e, only self-weight and diﬀerent volume fractions
+e.g. V ∗
+f = 0.3, 0.4, 0.5. The optimized results are displayed in Figs. 9a-9c, which are very
+close to 0-1 with similar topologies. Each optimized design has a horizontal bar-typed slender
+member which is expected with such boundary conditions. As volume fraction increases more
+material get accumulated near the support in the optimized structures (Figs. 9a-9c). This
+occurs to reduce the bending moment of self-weight of the material placed by the optimizer.
+Convergence curves of the objectives and the volume fractions are depicted in Fig. 10a and
+
+12
+
+Fig. 10b respectively. The objective convergence is smooth and rapid (Fig. 10a) that is also noted
+previously. Constrained nature of the problem is preserved as the volume constraint is active at
+the end of optimization (Fig. 10b). Moreover, the trends of volume fraction convergence plots
+are similar as the employed β continuation is same of them. The steps in volume convergence
+curves (Fig. 10b) are associated with β updation.
+
+(a) Tower design domain
+
+(b) f0 = 2.24 × 10−3 N m
+
+(c)
+
+Figure 12: (a) Design domain of dimension Lx × Ly = 1 m × 2.5 m is under its self-weight and external load Fext,
+(b) Optimized design for Vf = 0.25, (c) Convergence curves for the objective and volume fraction.
+
+(a)
+
+(b) f0 = 6.23 × 10−4 N m
+
+(c)
+
+Figure 13: (a) Design domain of dimension Lx × Ly = 2 m × 2 m is subject to its self-weight. A non-design
+void region of dimension 7Lx
+2 is present (b) Optimized design, (c) Convergence curves for the objective and
+volume fraction.
+
+4 × Ly
+
+Next, we solve the MBB beam design with diﬀerent magnitudes of Fext, i.e., with diﬀerent κ.
+The desired resource volume is set to 25%. Other parameters are same as above. The optimized
+results are shown in Fig. 11. One can note that as κ decreases, the material gets transferred from
+the center region to the lateral sides of the domain so that the optimized designs experience
+less bending moment due to self-weight. The central structures which support the external
+load disappear eventually as magnitude of Fext is decreased. The geometry of the optimized
+layout gradually changes to two connected arch structures facing towards each other. The ﬁnal
+compliance decreases as κ decreases that is as expected. The convergence of objective is found
+to be smooth and rapid. The volume fractions are satisﬁed and remain active for all κ.
+
+13
+
+Lx=1mLy2.5mgFextyxLx=2mLyLx8Lx82mgLy2Voidregion4.1.4 Example 3
+
+For this example, a design domain for tower structure is consider with self-weight and an external
+load.
+
+The design domain is displayed in Fig. 12a. Both ends of the bottom edge are ﬁxed. Lx × Ly =
+1 m × 2.5 m is taken. Filter radius is equal to 5.6 × max
+. In light of the vertical
+symmetry, only a symmetric half design domain is consider for simulation and optimization.
+110 × 550 FEs are employed to parameterize the symmetric half domain. Volume fraction is set
+to 0.25. Magnitude of the external load is taken equal to the self-weight. The load is applied
+at the center of the top edge of domain in the negative y−direction. Other design parameters
+are same as above.
+
+(cid:16) Lx
+Nex
+
+, Ly
+Ney
+
+(cid:17)
+
+The optimized tower structure is shown in Fig. 12b. The objective and the volume fraction
+convergence plots are displayed in Fig. 12c. A rapid and smooth convergence in the objective
+can be noted. The volume fraction is satisﬁed and remains active at the end of optimization.
+The optimized structure is close to 0-1. A vertical slender structure appears in the optimized
+design (Fig. 12b) to contain the applied external load. By and large, the optimized design
+resemble a typical tower design.
+
+Figure 14: A Pareto curve and optimized arch designs for diﬀerent volume fraction
+
+4.1.5 Example 4
+
+In this example, the method is demonstrated by designing a structure resembling a typical house
+arch structure.
+
+The design domain and boundary conditions are shown in Fig. 13a wherein Lx ×Ly = 2 m×2 m.
+A non-design void region of size 7Lx
+2 (Fig. 13a) is present in the design domain to facilitate
+entry and exit. The structure is considered under self-weight only, i.e., κ = 0. Though a
+
+4 × Ly
+
+14
+
+(a)
+0.8823 × 10−2 N m
+
+f0
+
+=
+
+(b)
+0.0155 × 10−2 N m
+
+f0
+
+=
+
+(c)
+0.0143 × 10−2 N m
+
+f0
+
+=
+
+(d)
+0.8820 × 10−2 N m
+
+f0
+
+=
+
+Figure 15: Optimized results. (a)ηγ = 0.1, βγ = 10, (b) ηγ = 0.05, βγ = 10, (c)ηγ = 0.01, βγ = 10, and (d)
+ηγ = 0.1, βγ = 20
+
+vertical symmetry exists, we take full domain to analyze and optimize so that any deviation
+from symmetry can be noted in presence of a non-design domain. The domain is parameterized
+by Nex × Ney = 240 × 240 FEs. The permitted volume fraction is 0.40. Filter radius is set to
+3.6 × max
+. Other parameters are same as those used above.
+
+(cid:17)
+
+(cid:16) Lx
+Nex
+
+, Ly
+Ney
+
+The optimized result is displayed in Fig. 13b. The optimized design is constituted via two pillars
+and an arch structure on the top. The corresponding convergence plots are depicted in Fig. 13c.
+As noted earlier here too the objective convergence is rapid and smooth. One can note that the
+volume constraint is active at the end of optimization. This indicates that method works well
+when non-design domains are present.
+
+In this section, we present the eﬀect of diﬀerent parameters on the optimized designs with
+self-weight.
+
+4.2 Parameter study
+
+4.2.1 Volume fraction
+
+Herein, diﬀerent volume fractions ranging from 0.1 to 0.9 are used to solve the arch structure
+(Fig. 3a). Nex × Ney = 200 × 100 FEs is used to represent the design domain. βγ = 6 and
+ηγ = 0.01 are considered. Filter radius is set to 2.5 × max
+. Other design parameters
+are same as those used in Sec. 4.1.1.
+
+(cid:16) Lx
+Nex
+
+, Ly
+Ney
+
+(cid:17)
+
+(a) V ∗
+
+f = 0.1
+
+(b) V ∗
+
+f = 0.15
+
+(c) V ∗
+
+f = 0.50
+
+(d) V ∗
+
+f = 0.6
+
+ηγ = 0.001, βγ = 20
+
+ηγ = 0.003, βγ = 12
+
+ηγ = 0.15, βγ = 6
+
+ηγ = 0.225, βγ = 8
+
+Figure 16: Optimized results. (a)f0 = 4.6 × 10−5 N m, (b) f0 = 8.7 × 10−5 N m, (c) f0 = 7.69 × 10−4 N m, and
+(d) f0 = 1.1 × 10−3 N m
+
+Fig. 14 displays a Pareto curve between compliance and volume fractions. As volume fraction
+increases, self-weight of the optimized design increases and thus, corresponding compliance
+increases. The optimized results are shown in Fig. 14 for every volume fraction. It is noted
+that the volume constraint for each case remains active at the end of optimization, and the
+corresponding objective convergence is rapid and smooth. The optimized design with volume
+
+15
+
+(a)
+
+(b)
+
+Figure 17: 3D design domains. (a) Arch structure domain and (b) Tower design domain. Gravity is indicated
+via gray parallel arrows pointing in the negative z−direction.
+
+fraction 0.1 is disconnected, which is constituted via two pillars (see Sec. 4.2.2). Compliance
+with V ∗
+
+f = 0.1 is obtained higher than that with V ∗
+
+f = 0.2.
+
+4.2.2 Mass density parameters
+
+This study demonstrates the eﬀect of diﬀerent mass density parameters {ηγ, βγ} on the opti-
+mized designs with self-weight.
+
+The design domain for this study is shown in Fig. 3a. Volume fraction V ∗
+
+f = 0.20 is set, and
+, Ly
+ﬁlter radius is taken equal to 2.5 × max
+. Nex × Ney = 200 × 100 FEs is employed to
+Ney
+describe the design domain. Note that, βγ controls the slope of material density interpolation
+(Fig. 2). For higher βγ, elements with ¯x ≥ ηγ act as solid FEs.
+
+(cid:16) Lx
+Nex
+
+(cid:17)
+
+The optimized designs with various {ηγ, βγ} are depicted in Fig. 15. Topologies of the optimized
+designs are similar in Fig. 15b and Fig. 15c but having diﬀerent ﬁnal objective values. The
+obtained ﬁnal objective value with {ηγ, βγ} = {0.01, 20} is lower than all other cases considered,
+which suggests that indeed an arch-shaped structure is the actual optimized design for the
+problem shown in Fig. 3a. Optimized designs shown in Fig. 15a, Fig. 15d are disconnected,
+and their ﬁnal compliance are higher than the other two in Fig. 15. When decreasing ηγ and
+increasing βγ, the region of transitions from void to solid reduces (Fig. 2) and in those cases, the
+optimized designs are found to be connected and sensible. Relatively moderate βγ and ηγ oﬀers
+smoother optimization problem, however the ﬁnal obtained designs may be disconnected. Thus,
+in general, βγ and ηγ can be chosen such that a suitable trade-oﬀ between the diﬀerentiability
+f )p and
+and transition can be obtained. By and large, based on our experience, ηγ close to (V ∗
+βγ between 5 − 20 ensure the desired trade-oﬀ. To demonstrate that indeed the recommended
+values work, we solve the problem for permitted volume fractions 0.1, 0.15, 0.5 and 0.6 with
+{0.001, 20}, {0.003, 12}, {0.15, 6}, {0.225, 8} as their {ηγ, βγ}. Fig. 16 shows the optimized
+design. These designs are connected and sensible. In addition, the volume constraints for all
+cases are found to be satisﬁed and active at the end of optimization.
+
+16
+
+gLx=2mLy=1mLz=1mxyzFixededgesgFextLx=1mLy=1mLz=2.5mxyzFixedvertices(a) Isoview direc-
+tion
+
+(b) +x−direction
+
+(c) +y−direction
+
+(d) +z−direction
+
+(e) −z−direction
+
+Figure 18: 3D Optimized results for the arch geometry are shown in diﬀerent view directions.
+
+(a) Isoview direction
+
+(b) +x−direction
+
+(c) +y−direction
+
+(d) +z−direction
+
+(e) −z−direction
+
+Figure 19: 3D Optimized results for a tower structure are displayed in diﬀerent view directions.
+
+4.3 Three-dimensional examples
+
+This section demonstrates that the proposed approach can without much diﬃculty be extended
+for 3D problems including self-weight. TO is performed using an in-house MATLAB code
+wherein the conjugate gradient method in association with incomplete Cholesky preconditioning
+
+17
+
+(a)
+
+(b)
+
+Figure 20: Material distributions for diﬀerent cross-sections in arbitrary directions (a) Arch structure (b) Tower
+structure.
+
+is employed to solve the linear system from the equilibrium and adjoint equation.
+
+Two 3D problems are solved: (i) an arch structure problem with only self-weight and (ii) a tower
+structure with self-weight and a central constant load. Their design domains are displayed in
+Fig. 17. For the arch structure, we exploit one symmetry axis for the analysis and optimization
+(Fig. 17a), whereas for the tower problem both symmetry axes are exploited (Fig. 17b). The
+symmetric parts used for optimization are shadowed using lightcyan color (Fig. 17).
+
+Lx × Ly × Lz = 2 m × 1 m × 1 m and Lx × Ly × Lz = 1 m × 1 m × 2.5 m are considered for the
+arch design (Fig. 17a) and the tower design (Fig. 17b) respectively. The half symmetric part of
+arch domain (colored shape in Fig. 17a) is parameterized via Nex × Ney × Nez = 50 × 50 × 50
+hexahedral FEs, whereas the quarter part of the tower domain (colored shape in Fig. 17b) is
+described via Nex × Ney × Nez = 40 × 40 × 200 FEs. The permitted volume fractions, ﬁlter
+radii and material density parameters {ηγ, βγ} for arch and tower design problems are set to
+, Lz
+0.35% and 0.1%, 4.8 × max
+, and {0.01, 8} and
+and 2
+Nez
+{0.001, 8} respectively. Other design parameters are same as those used above.
+
+(cid:16) Lx
+Nex
+
+(cid:16) Lx
+Nex
+
+3 × max
+
+, Ly
+Ney
+
+, Ly
+Ney
+
+, Lz
+Nez
+
+√
+
+(cid:17)
+
+(cid:17)
+
+Figure 18 and Fig. 19 show the optimized arch and tower designs in diﬀerent view directions
+respectively. An isosurface with the physical density value at 0.90 is taken to plot the optimized
+results. The results in an isoview direction are displayed in Fig. 18a and Fig. 19a respectively.
+It can be noted that +y−direction view of the optimized 3D arch result (Fig. 18c) resembles
+that obtained for 2D arch structure (Fig. 7a). For both designs, the optimizer has succeeded in
+providing the optimized shape which can be more advantageous for the compliance objective.
+The material distribution pertaining to diﬀerent cross-sections for the arch and tower structures
+are shown in Fig. 20a and Fig. 20b respectively. It can be noticed that the material distributions
+at the cross-sectional areas are close to 1.0 indicating that the optimized results are closed to
+binary. In addition, the results render clear design interpretation. We can expect relatively more
+detailed features in the optimized tower design with much ﬁner mesh which can be eﬃciently
+obtained using fully parallelized framework, which forms one of the future works.
+
+18
+
+5 Closure
+
+This paper presents a novel density-based topology optimization approach to optimize continua
+subject to self-weight. The robustness and versatility of the approach is demonstrated by
+optimizing various structures pertaining to 2D and 3D dimensions. The compliance of the
+structure is minimized with a given volume constraint and a conceptualized constraint.
+
+One of the challenges for the design problems involving self-weight is the tendency to lose their
+constrained nature.
+In the presented method, the mass density of each element is interpo-
+lated using a smooth Heaviside projection function. This facilitates a smooth representation
+of the self-weight and thus, corresponding load sensitivities are evaluated readily using the
+adjoint-variable method. In addition, this helps formulate an additional constraint for implic-
+itly imposing a lower bound on the permitted resource volume of the domain. The given volume
+fraction for the problem gets satisﬁed and remains active at the end of the optimization, i.e.,
+constrained behavior of the problem is retained. The mass density parameters are selected a
+priori to the optimization that aﬀect the optimized topologies. The recommended values are
+provided based on the numerical examples solved.
+
+The modiﬁed SIMP material interpolation method is employed in conjunction with a three-ﬁeld
+density representation technique. Parameter β is increased using a continuation scheme such
+that the optimized designs steer toward close to 0-1 solutions. Consequently, the parasitic eﬀects
+which arise typically due to low-stiﬀness elements is circumvented. The presented approach
+works well with designs containing non-design domains as it is shown via a house arch design
+containing a non-design void region and maintains symmetric nature of problem in the optimized
+structures. The approach is easily extended to 3D problem settings that is demonstrated via
+two three-dimensional problems. A 3D arch structure experiencing only self-weight and a 3D
+tower structure experiencing both self-weight and external load are optimized and presented.
+It is noted that convergence of the objective is smooth and rapid for all the problems and the
+corresponding volume constraints remain active at the end of optimization. The optimized
+results provide clear design interpretation.
+
+Acknowledgment
+
+The author would like to thank Professor G. K. Ananthasuresh for fruitful discussions, Professor
+Krister Svanberg for providing MATLAB codes of the MMA optimizer and acknowledge ﬁnancial
+support from the Science & Engineering research board, Department of Science and Technology,
+Government of India under the project ﬁle number RJF/2020/000023.
+
+References
+
+Bruns TE, Tortorelli DA (2001) Topology optimization of non-linear elastic structures and
+compliant mechanisms. Computer methods in applied mechanics and engineering 190(26-
+27):3443–3459
+
+Bruyneel M, Duysinx P (2005) Note on topology optimization of continuum structures including
+
+self-weight. Structural and Multidisciplinary Optimization 29(4):245–256
+
+Chang C, Chen A (2014) The gradient projection method for structural topology optimization
+including density-dependent force. Structural and Multidisciplinary Optimization 50(4):645–
+657
+
+19
+
+Cook RD, Malkus DS, Plesha ME, Witt RJ (2007) Concepts and applications of ﬁnite element
+
+analysis. John wiley & sons
+
+F´elix L, Gomes AA, Suleman A (2020) Topology optimization of the internal structure of an
+
+aircraft wing subjected to self-weight load. Engineering Optimization 52(7):1119–1135
+
+Guest JK, Pr´evost JH, Belytschko T (2004) Achieving minimum length scale in topology op-
+timization using nodal design variables and projection functions. International journal for
+numerical methods in engineering 61(2):238–254
+
+Holmberg E, Thore CJ, Klarbring A (2015) Worst-case topology optimization of self-weight
+loaded structures using semi-deﬁnite programming. Structural and Multidisciplinary Opti-
+mization 52(5):915–928
+
+Huang X, Xie Y (2011) Evolutionary topology optimization of continuum structures including
+design-dependent self-weight loads. Finite Elements in Analysis and Design 47(8):942–948
+
+Kumar P, Langelaar M (2021) On topology optimization of design-dependent pressure-loaded
+three-dimensional structures and compliant mechanisms. International Journal for Numerical
+Methods in Engineering 122(9):2205–2220
+
+Kumar P, Frouws J, Langelaar M (2020) Topology optimization of ﬂuidic pressure-loaded struc-
+tures and compliant mechanisms using the darcy method. Structural and Multidisciplinary
+Optimization 61(4)
+
+Lazarov BS, Wang F, Sigmund O (2016) Length scale and manufacturability in density-based
+
+topology optimization. Archive of Applied Mechanics 86(1-2):189–218
+
+Lee E, James KA, Martins JR (2012) Stress-constrained topology optimization with design-
+
+dependent loading. Structural and Multidisciplinary Optimization 46(5):647–661
+
+Novotny A, Lopes C, Santos R (2021) Topological derivative-based topology optimization
+of structures subject to self-weight loading. Structural and Multidisciplinary Optimization
+63(4):1853–1861
+
+Pedersen NL (2000) Maximization of eigenvalues using topology optimization. Structural and
+
+multidisciplinary optimization 20(1):2–11
+
+Rozvany GI (1977) Optimal plastic design: allowance for self-weight. Journal of the Engineering
+
+Mechanics Division 103(6):1165–1170
+
+Sigmund O (2007) Morphology-based black and white ﬁlters for topology optimization. Struc-
+
+tural and Multidisciplinary Optimization 33(4-5):401–424
+
+Sigmund O, Maute K (2013) Topology optimization approaches. Structural and Multidisci-
+
+plinary Optimization 48(6):1031–1055
+
+Stolpe M, Svanberg K (2001) An alternative interpolation scheme for minimum compliance
+
+topology optimization. Structural and Multidisciplinary Optimization 22(2):116–124
+
+Svanberg K (1987) The method of moving asymptotes–a new method for structural optimiza-
+
+tion. International journal for numerical methods in engineering 24(2):359–373
+
+Trillet D, Duysinx P, Fernandez Sanchez EF (2021) Analytical relationships for imposing min-
+imum length scale inthe robust topology optimization formulation. Structural and Multidis-
+ciplinary Optimization
+
+20
+
+Wang F, Lazarov BS, Sigmund O (2011) On projection methods, convergence and robust formu-
+lations in topology optimization. Structural and Multidisciplinary Optimization 43(6):767–
+784
+
+Xu H, Guan L, Chen X, Wang L (2013) Guide-weight method for topology optimization of
+continuum structures including body forces. Finite Elements in Analysis and Design 75:38–
+49
+
+Zhang S, Li H, Huang Y (2021) An improved multi-objective topology optimization model based
+on simp method for continuum structures including self-weight. Structural and Multidisci-
+plinary Optimization 63(1):211–230
+
+Zhang W, Zhao L, Gao T (2017) Cbs-based topology optimization including design-dependent
+
+body loads. Computer Methods in Applied Mechanics and Engineering 322:1–22
+
+21
 
 
