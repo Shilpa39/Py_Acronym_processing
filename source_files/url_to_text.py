@@ -21,8 +21,8 @@ isLocal=False;
 
 #user_url="/home/a0492783/Downloads/TI_C7X_DSP_TRAINING_00.06/c7x_dsp_isa/C7x_ISA_Database.html"
 #user_url="/home/a0492783/Py_Acronym_processing/testcases/testcases_rawfiles/testcase1.pdf"
-#user_url="/home/a0492783/Py_Acronym_processing/testcases/testcases_urls.txt"
-#isLocal=True;
+user_url="/home/a0492783/Py_Acronym_processing/play.txt"
+isLocal=True;
 
 #code starts here
 if(len(sys.argv)>1):
@@ -194,24 +194,67 @@ else:
 Generic helper function that returns start and end index of the window of a given size 
 containing the acronym
 """
-def build_window(acronym_start_idx, acronym_end_idx, size):
-    window_start_idx = acronym_start_idx
-    window_end_idx = acronym_end_idx 
+def search(target, text, context):
+    # It's easier to use re.findall to split the string, 
+    # as we get rid of the punctuation
+    words = re.findall(r'\w+', text)
+
+    matches = (i for (i,w) in enumerate(words) if w == target)
+    for index in matches:
+        if index < context //2:
+            yield words[0:context+1]
+        elif index > len(words) - context//2 - 1:
+            yield words[-(context+1):]
+        else:
+            yield words[index - context//2:index + context//2 + 1]
+
+
+def build_window(acronym, text_file):
+    
+    size = len(acronym)*4;
+    
+    '''
+    window_left_start_idx = max(acronym_start_idx - size, 0)
+    window_left_end_idx = max(acronym_start_idx - 1, 0);
+    window_right_start_idx = min(acronym_end_idx + size, lastchar_idx)
+    window_right_end_idx = min(acronym_end_idx + 1, lastchar_idx)
+    '''
 
     ### Core logic
+    
+    lst_words = list(search(acronym,text_file,size));
 
-    return (window_start_idx, window_end_idx)
+    return lst_words
 
 
 """
 Function to get the expansion of the acronym
 """
-def expansion_finder(text_window, acronym):
-    expansion = "DNE"
+def expansion_finder(text_windows, acronym):
+    expansions = []
+    
 
     ### Core logic
+    for window in text_windows:
+        idx = window.index(acronym)
+        window[idx] = "*"
+        #print(window)
+        first_letters=[]
+        for word in window:
+            #print(word[0], type(word[0]))
+            #fisrt_letters = str(first_letters +""+ str(word[0:1]))
+            first_letters.append(word[0])
+        first_letters = ''.join(first_letters)
+        #print(first_letters)
+        #found_indices = re.search(acronym, first_letters, re.IGNORECASE).start()
+        found_indices = [_.start() for _ in re.finditer(acronym, first_letters,re.IGNORECASE)] 
+        for idx in found_indices:
+            exp_str = (' '.join(window[idx:idx+len(acronym)])).lower()
+            if(exp_str not in expansions):
+                expansions.append(exp_str)
+        
 
-    return expansion
+    return expansions
 
 
 fpath =  abs_outfile_path
@@ -221,9 +264,28 @@ expansion_database = {}
 with open(fpath,'r') as f:
     text_file = f.readlines()
     text_file = ' '.join(text_file)
-    text_file = re.sub(r"[^A-Za-z\.&]", " ", text_file)
 
-for x in re.finditer(r'\b[A-Z](?=([&.]?))(?:\1[A-Z]){1,5}\b', text_file):
-    ## Routine to build a window 
+acronym_list = set([x.group() for x in re.finditer(r'\b[A-Z](?=([&.]?))(?:\1[A-Z]){1,5}\b', text_file)])
+print(acronym_list, len(acronym_list))
+
+with open(fpath,'r') as f:
+    text_file = re.sub(r"[^A-Za-z\.&]", " ", text_file)
+    text_file = re.sub(r"\s+", " ", text_file)
+
+
+for acronym in acronym_list:
+    ## Routine to build a window from acronym_startidx, acronym_endidx, part of text of 100 chars around it
+    #a=x.group() 
+    acronym = re.sub(r"[^A-Za-z\.&]", "",acronym)
+    text_windows = build_window(acronym, text_file);
+    str_s = "%%% "+acronym+" %%%"
+    print(str_s)
+    #print(text_windows)
+    print("============")
+    
     ## Search for expansion
+    lst_expansion = expansion_finder(text_windows, acronym)
+    print(lst_expansion)
+
     ## Add to dictionary
+    
