@@ -11,6 +11,7 @@ import urllib.request
 from pdfminer.high_level import extract_text
 import os
 import re
+import math
 # importing the module
 import pandas as pd
 
@@ -23,8 +24,8 @@ isLocal=False;
 
 #user_url="/home/a0492783/Downloads/TI_C7X_DSP_TRAINING_00.06/c7x_dsp_isa/C7x_ISA_Database.html"
 #user_url="/home/a0492783/Py_Acronym_processing/testcases/testcases_rawfiles/testcase1.pdf"
-#user_url="/home/a0492783/Py_Acronym_processing/play.txt"
-#isLocal=True;
+user_url="/home/a0492783/Py_Acronym_processing/testcases/testcases_rawfiles/testfile-1-acronym.pdf"
+isLocal=True;
 
 #code starts here
 if(len(sys.argv)>1):
@@ -37,7 +38,7 @@ if(len(sys.argv)>1):
         else:
             print("Invalid input. Correct input format is:")
             cmnd_str = "python url_to_text.py"
-            cmnd_args = "<url/absolute_path to file> <True/False>"
+            cmnd_args = " <url/absolute_path to file> <True/False>"
             print(cmnd_str)
             print("or")
             print(cmnd_str+cmnd_args)
@@ -45,7 +46,7 @@ if(len(sys.argv)>1):
     else:
         print("Invalid input. Correct input format is:")
         cmnd_str = "python url_to_text.py"
-        cmnd_args = "<url/absolute_path to file> <True/False>"
+        cmnd_args = " <url/absolute_path to file> <True/False>"
         print(cmnd_str)
         print("or")
         print(cmnd_str+cmnd_args)
@@ -240,15 +241,10 @@ def expansion_finder(text_windows, acronym):
     for window in text_windows:
         idx = window.index(acronym)
         window[idx] = "*"
-        #print(window)
         first_letters=[]
         for word in window:
-            #print(word[0], type(word[0]))
-            #fisrt_letters = str(first_letters +""+ str(word[0:1]))
             first_letters.append(word[0])
         first_letters = ''.join(first_letters)
-        #print(first_letters)
-        #found_indices = re.search(acronym, first_letters, re.IGNORECASE).start()
         found_indices = [_.start() for _ in re.finditer(acronym, first_letters,re.IGNORECASE)] 
         for idx in found_indices:
             exp_str = (' '.join(window[idx:idx+len(acronym)])).lower()
@@ -271,6 +267,7 @@ with open(fpath,'r') as f:
 
 acronym_list = set([x.group() for x in re.finditer(r'\b[A-Z](?=([&.]?))(?:\1[A-Z]){1,5}\b', text_file)])
 print(acronym_list, len(acronym_list))
+#\b[A-Z](?=([&.]?))(?:\1[A-Z]){1,5}\b
 #\b[A-Z](?=([&.]?))(?:[a-z]){0,1}(?:\1[A-Z]){1,5}(?:[a-z]*)\b
 
 with open(fpath,'r') as f:
@@ -282,23 +279,15 @@ df = pd.read_csv(os.path.abspath("../output_files/database.csv"), usecols= ['Acr
 
 for acronym in acronym_list:
     ## Routine to build a window from acronym_startidx, acronym_endidx, part of text of 100 chars around it
-    #a=x.group() 
     acronym = re.sub(r"[^A-Za-z\.&]", "",acronym)
     text_windows = build_window(acronym, text_file);
-    str_s = "%%% "+acronym+" %%%"
+    str_s = "*** "+acronym+" ***"
     print(str_s)
-    #print(text_windows)
-    print("============")
     
     ## Search for expansion
     lst_expansion = expansion_finder(text_windows, acronym)
     print(lst_expansion)
-
-    
-    
-    
-    #print(type(df.Acronym.values), df.Acronym.values.shape)
-    #print(database_expansions_list)
+    print("============")
     
     if acronym not in df.Acronym.values:
         a=0;
@@ -313,19 +302,12 @@ for acronym in acronym_list:
     else:
         #print(database_expansions_list)
         raw_expansions = df[df['Acronym']==acronym]['Expansions'].values
-        database_expansions_list = raw_expansions[0].split(";")
+        database_expansions_list = []
+        if((type(raw_expansions[0])==str)):
+            database_expansions_list = raw_expansions[0].split(";")
         idx_acronym = df.index[df['Acronym']==acronym].tolist()[0];
         to_be_written = ';'.join(list(set().union(database_expansions_list, lst_expansion)));
         df.at[idx_acronym, "Expansions"] = to_be_written
 
-        #print("to be ---",to_be_written)
-        #print(idx_acronym)
-        
-        
-            
-    '''
-    for key, value in dict_file.items():
-        writer.writerow([key, value])
-    '''
 df.to_csv("/home/a0492783/Py_Acronym_processing/output_files/database.csv",index=False)
 print(df)
