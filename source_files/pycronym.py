@@ -236,7 +236,11 @@ def buildAcronymDatabase(acronym_list, df, text_file, outPath = ''):
     print(df)
 
 def main():
-    # Process command line arguments
+    
+
+    print(stop_words)
+    sys.exit()
+
     if(len(sys.argv)>1):
         user_url = sys.argv[1]
         if(len(sys.argv)>2):
