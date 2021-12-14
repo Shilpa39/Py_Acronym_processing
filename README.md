@@ -15,6 +15,7 @@ To install all the required packages run the following command from terminal
 From the parent directory, navigate to the source_files
 ```console
 ~/Py_Acronym_processing$ cd source_files
+~/Py_Acronym_processing/source_files$ python init_files.py #This is for clearing the database
 ~/Py_Acronym_processing/source_files$ python pycronym.py <url/absolute_path to file> <True/False>
 ```
 
