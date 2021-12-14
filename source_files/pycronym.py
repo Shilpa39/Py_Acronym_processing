@@ -222,7 +222,9 @@ def buildAcronymDatabase(acronym_list, df, text_file, outPath = ''):
             
         else:
             raw_expansions = df[df['Acronym']==acronym]['Expansions'].values
-            database_expansions_list = raw_expansions[0].split(";")
+            database_expansions_list = []
+            if((type(raw_expansions[0])==str)):
+                database_expansions_list = raw_expansions[0].split(";")
             idx_acronym = df.index[df['Acronym']==acronym].tolist()[0];
             to_be_written = ';'.join(list(set().union(database_expansions_list, lst_expansion)));
             df.at[idx_acronym, "Expansions"] = to_be_written
@@ -277,11 +279,6 @@ def main():
 
     # Remove pre existing database (old documents might cause issue)
     csv_outpath = "../output_files/database.csv"
-    if(os.path.isfile(os.path.abspath(csv_outpath))):
-        os.remove(csv_outpath)
-
-    with open(csv_outpath, 'w') as database:
-        database.write("Acronym,Expansions\n")
 
     df = pd.read_csv(os.path.abspath(csv_outpath), usecols= ['Acronym','Expansions'])
     buildAcronymDatabase(acronym_list, df, text_file, csv_outpath)
