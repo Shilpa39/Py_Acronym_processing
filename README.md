@@ -15,16 +15,17 @@ To install all the required packages run the following command from terminal
 From the parent directory, navigate to the source_files
 ```console
 ~/Py_Acronym_processing$ cd source_files
-~/Py_Acronym_processing/source_files$ python init_files.py
 ~/Py_Acronym_processing/source_files$ python pycronym.py <url/absolute_path to file1> <True/False>
 ~/Py_Acronym_processing/source_files$ python pycronym.py <url/absolute_path to file2> <True/False>
 .
 .
 ```
 
-The first command line argument is either the URL or the absolute path (if file is located on host).The second command line argument is used to clear the database before single/multiple documents are passed to build the database of acronyms. The third command line argument indicates whether or not the file is hosted locally or not (True if it is a local path, False if not). Both arguments are mandatory.
+The first command line argument is either the URL or the absolute path (if file is located on host) The second command line argument indicates whether or not the file is hosted locally or not (True if it is a local path, False if not). Both arguments are mandatory.
 
 If you want to see an example of the application running, simply run the command without arguments. It will get the acronyms from the following PDF document: https://arxiv.org/pdf/2110.11694
+
+The database will be stored as a csv file (database.csv) at the output_files folder.
 
 ```console
 ~/Py_Acronym_processing/source_files$ python pycronym.py
