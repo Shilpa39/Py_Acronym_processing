@@ -278,10 +278,14 @@ def main():
     text_file = re.sub(r"\s+", " ", text_file)
 
     # Build list of unique acronyms from a document
-    acronym_list = set([x.group() for x in re.finditer(r'\b[A-Z](?=([&.]?))(?:\1[A-Z]){1,5}\b', text_file)])
+    acronym_list = set([x.group() for x in re.finditer(r'([A-Z](?:(?:[a-z]{,3}|[&.]?)[A-Z]){1,3})|(\b[A-Z][&.a-z]{,2}[A-Z]\b)', text_file)])
 
     # Remove pre existing database (old documents might cause issue)
     csv_outpath = "../output_files/database.csv"
+
+    if not os.path.exists(csv_outpath):
+        with open(csv_outpath,'w') as database:
+            database.write('Acronym,Expansions\n')
 
     df = pd.read_csv(os.path.abspath(csv_outpath), usecols= ['Acronym','Expansions'])
     buildAcronymDatabase(acronym_list, df, text_file, csv_outpath)
