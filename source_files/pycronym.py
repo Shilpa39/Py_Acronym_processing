@@ -189,7 +189,10 @@ def expansion_finder(text_file, acronym, max_window_size):
             #print(window)
             first_letters=[]
             for word in window:
-                first_letters.append(word[0])
+                if(len(word)>1):
+                    first_letters.append(word[0])
+                else:
+                    first_letters.append("*")
             first_letters = ''.join(first_letters)
             found_indices = [_.start() for _ in re.finditer(acronym, first_letters,re.IGNORECASE)] 
             for idx in found_indices:
