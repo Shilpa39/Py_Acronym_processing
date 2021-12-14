@@ -11,6 +11,8 @@ import urllib.request
 from pdfminer.high_level import extract_text
 import os
 import re
+# importing the module
+import pandas as pd
 
 
 #user-defined variables - could be overridden by command line arguments
@@ -21,8 +23,8 @@ isLocal=False;
 
 #user_url="/home/a0492783/Downloads/TI_C7X_DSP_TRAINING_00.06/c7x_dsp_isa/C7x_ISA_Database.html"
 #user_url="/home/a0492783/Py_Acronym_processing/testcases/testcases_rawfiles/testcase1.pdf"
-user_url="/home/a0492783/Py_Acronym_processing/play.txt"
-isLocal=True;
+#user_url="/home/a0492783/Py_Acronym_processing/play.txt"
+#isLocal=True;
 
 #code starts here
 if(len(sys.argv)>1):
@@ -259,7 +261,9 @@ def expansion_finder(text_windows, acronym):
 
 fpath =  abs_outfile_path
 text_file = ''
-expansion_database = {}
+#expansion_database = {}
+
+import csv
 
 with open(fpath,'r') as f:
     text_file = f.readlines()
@@ -267,11 +271,14 @@ with open(fpath,'r') as f:
 
 acronym_list = set([x.group() for x in re.finditer(r'\b[A-Z](?=([&.]?))(?:\1[A-Z]){1,5}\b', text_file)])
 print(acronym_list, len(acronym_list))
+#\b[A-Z](?=([&.]?))(?:[a-z]){0,1}(?:\1[A-Z]){1,5}(?:[a-z]*)\b
 
 with open(fpath,'r') as f:
     text_file = re.sub(r"[^A-Za-z\.&]", " ", text_file)
     text_file = re.sub(r"\s+", " ", text_file)
 
+# read specific columns of csv file using Pandas
+df = pd.read_csv(os.path.abspath("../output_files/database.csv"), usecols= ['Acronym','Expansions'])
 
 for acronym in acronym_list:
     ## Routine to build a window from acronym_startidx, acronym_endidx, part of text of 100 chars around it
@@ -287,5 +294,38 @@ for acronym in acronym_list:
     lst_expansion = expansion_finder(text_windows, acronym)
     print(lst_expansion)
 
-    ## Add to dictionary
     
+    
+    
+    #print(type(df.Acronym.values), df.Acronym.values.shape)
+    #print(database_expansions_list)
+    
+    if acronym not in df.Acronym.values:
+        a=0;
+        #expansion_database[acronym] = lst_expansion;
+        to_be_written = ';'.join(lst_expansion);
+        #print({acronym:to_be_written})
+        df2 = pd.DataFrame([[acronym,to_be_written]], columns=['Acronym','Expansions'], index=[len(df)])
+        #print(df2)
+        df = df.append(df2, ignore_index=True)
+        #print(df)
+        
+    else:
+        #print(database_expansions_list)
+        raw_expansions = df[df['Acronym']==acronym]['Expansions'].values
+        database_expansions_list = raw_expansions[0].split(";")
+        idx_acronym = df.index[df['Acronym']==acronym].tolist()[0];
+        to_be_written = ';'.join(list(set().union(database_expansions_list, lst_expansion)));
+        df.at[idx_acronym, "Expansions"] = to_be_written
+
+        #print("to be ---",to_be_written)
+        #print(idx_acronym)
+        
+        
+            
+    '''
+    for key, value in dict_file.items():
+        writer.writerow([key, value])
+    '''
+df.to_csv("/home/a0492783/Py_Acronym_processing/output_files/database.csv",index=False)
+print(df)
