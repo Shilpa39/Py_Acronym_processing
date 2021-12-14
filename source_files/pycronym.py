@@ -206,13 +206,13 @@ Function that builds the acronym expansion database for a given document
 """
 def buildAcronymDatabase(acronym_list, df, text_file, outPath = ''):
     for acronym in acronym_list:
-        acronym = re.sub(r"[^A-Za-z\.&]", "",acronym)
+        cleaned_acronym = re.sub(r"[^A-Za-z]", "",acronym)
         str_s = "%%% "+acronym+" %%%"
         print(str_s)
         print("============")
         
         ## Search for expansion
-        lst_expansion = expansion_finder(text_file, acronym, len(acronym)*64)
+        lst_expansion = expansion_finder(text_file, cleaned_acronym, len(cleaned_acronym)*64)
         print(lst_expansion)
         
         if acronym not in df.Acronym.values:
