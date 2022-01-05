@@ -191,6 +191,8 @@ def expansion_finder(text_file, acronym, max_window_size):
             for word in window:
                 if(len(word)>1):
                     first_letters.append(word[0])
+                elif(len(word)==1 and (word[0].lower()=="i" or word[0].lower()=="a")):
+                    first_letters.append(word[0])
                 else:
                     first_letters.append("*")
             first_letters = ''.join(first_letters)
@@ -238,8 +240,8 @@ def buildAcronymDatabase(acronym_list, df, text_file, outPath = ''):
 def main():
     
 
-    print(stop_words)
-    sys.exit()
+    #print(stop_words)
+    #sys.exit()
 
     if(len(sys.argv)>1):
         user_url = sys.argv[1]
@@ -278,11 +280,14 @@ def main():
         text_file = ' '.join(text_file)
 
     # Clean Document
+    text_file = re.sub(r"'", "", text_file)
     text_file = re.sub(r"[^A-Za-z\.&]", " ", text_file)
     text_file = re.sub(r"\s+", " ", text_file)
 
     # Build list of unique acronyms from a document
     acronym_list = set([x.group() for x in re.finditer(r'([A-Z](?:(?:[a-z]{,3}|[&.]?)[A-Z]){1,3})|(\b[A-Z][&.a-z]{,2}[A-Z]\b)', text_file)])
+
+    #text_file = re.sub(r".", " ", text_file)
 
     # Remove pre existing database (old documents might cause issue)
     csv_outpath = "../output_files/database.csv"
