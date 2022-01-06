@@ -180,6 +180,8 @@ def expansion_finder(text_file, acronym, max_window_size):
     expansions = []
     window_size = len(acronym)*4
 
+    stop_words_list = ['i', 'me', 'my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you', "you're", "you've", "you'll", "you'd", 'your', 'yours', 'yourself', 'yourselves', 'he', 'him', 'his', 'himself', 'she', "she's", 'her', 'hers', 'herself', 'it', "it's", 'its', 'itself', 'they', 'them', 'their', 'theirs', 'themselves', 'what', 'which', 'who', 'whom', 'this', 'that', "that'll", 'these', 'those', 'am', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'having', 'do', 'does', 'did', 'doing', 'a', 'an', 'the', 'and', 'but', 'if', 'or', 'because', 'as', 'until', 'while', 'of', 'at', 'by', 'for', 'with', 'about', 'against', 'between', 'into', 'through', 'during', 'before', 'after', 'above', 'below', 'to', 'from', 'up', 'down', 'in', 'out', 'on', 'off', 'over', 'under', 'again', 'further', 'then', 'once', 'here', 'there', 'when', 'where', 'why', 'how', 'all', 'any', 'both', 'each', 'few', 'more', 'most', 'other', 'some', 'such', 'no', 'nor', 'not', 'only', 'own', 'same', 'so', 'than', 'too', 'very', 's', 't', 'can', 'will', 'just', 'don', "don't", 'should', "should've", 'now', 'd', 'll', 'm', 'o', 're', 've', 'y', 'ain', 'aren', "aren't", 'couldn', "couldn't", 'didn', "didn't", 'doesn', "doesn't", 'hadn', "hadn't", 'hasn', "hasn't", 'haven', "haven't", 'isn', "isn't", 'ma', 'mightn', "mightn't", 'mustn', "mustn't", 'needn', "needn't", 'shan', "shan't", 'shouldn', "shouldn't", 'wasn', "wasn't", 'weren', "weren't", 'won', "won't", 'wouldn', "wouldn't"]
+
     while (len(expansions) == 0 and window_size <= max_window_size):
         text_windows = build_window(acronym, text_file, window_size)
 
@@ -189,18 +191,28 @@ def expansion_finder(text_file, acronym, max_window_size):
             #print(window)
             first_letters=[]
             for word in window:
-                if(len(word)>1):
-                    first_letters.append(word[0])
+                if(word.lower() in stop_words_list):
+                    first_letters.append("%"+word[0].lower())
+                elif(len(word)>1):
+                    first_letters.append(word[0].lower())
                 elif(len(word)==1 and (word[0].lower()=="i" or word[0].lower()=="a")):
-                    first_letters.append(word[0])
+                    first_letters.append(word[0].lower())
                 else:
-                    first_letters.append("*")
+                    first_letters.append("#")
             first_letters = ''.join(first_letters)
-            found_indices = [_.start() for _ in re.finditer(acronym, first_letters,re.IGNORECASE)] 
-            for idx in found_indices:
-                exp_str = (' '.join(window[idx:idx+len(acronym)])).lower()
-                if(exp_str not in expansions):
-                    expansions.append(exp_str)
+            regex_acronym = re.sub("\s?","(%[a-z])?%?",acronym.lower())
+            regex_acronym = regex_acronym[11:-11]
+            found_se_indices = [[_.start(),_.end()] for _ in re.finditer(regex_acronym, first_letters,re.IGNORECASE)]
+            found_indices = [_.start() for _ in re.finditer(regex_acronym, first_letters,re.IGNORECASE)]
+            for idx in found_se_indices:   
+                init_str = first_letters[idx[0]:idx[1]]
+                init_str = re.sub(r"%", "", init_str)
+                print(init_str)
+                found_indices = [_.start() for _ in re.finditer(init_str, re.sub(r"%", "", first_letters),re.IGNORECASE)]
+                for orig_idx in found_indices:
+                    exp_str = (' '.join(window[orig_idx:orig_idx+len(init_str)])).lower()
+                    if(exp_str not in expansions):
+                        expansions.append(exp_str)
         
         window_size *= 2
         
