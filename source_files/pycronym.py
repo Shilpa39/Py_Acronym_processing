@@ -200,8 +200,10 @@ def expansion_finder(text_file, acronym, max_window_size):
                 else:
                     first_letters.append("#")
             first_letters = ''.join(first_letters)
-            regex_acronym = re.sub("\s?","(%[a-z])?%?",acronym.lower())
-            regex_acronym = regex_acronym[11:-11]
+            sub_equation = "(%[a-z]){,2}%?"
+            regex_acronym = re.sub("\s?",sub_equation,acronym.lower())
+            regex_acronym = regex_acronym[len(sub_equation):-1*len(sub_equation)]
+            print(regex_acronym)
             found_se_indices = [[_.start(),_.end()] for _ in re.finditer(regex_acronym, first_letters,re.IGNORECASE)]
             found_indices = [_.start() for _ in re.finditer(regex_acronym, first_letters,re.IGNORECASE)]
             for idx in found_se_indices:   
@@ -292,7 +294,7 @@ def main():
         text_file = ' '.join(text_file)
 
     # Clean Document
-    text_file = re.sub(r"'", "", text_file)
+    text_file = re.sub(r"'", " ", text_file)
     text_file = re.sub(r"[^A-Za-z\.&]", " ", text_file)
     text_file = re.sub(r"\s+", " ", text_file)
 
